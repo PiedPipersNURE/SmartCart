@@ -36,6 +36,7 @@
             android:layout_marginBottom="374dp"
             android:fontFamily="casual"
             android:text="@string/you_are_anonymous_user"
+            android:textAlignment="center"
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="visible"

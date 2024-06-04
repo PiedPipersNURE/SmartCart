@@ -1,5 +1,6 @@
 package ua.nure.smartcart.ui.account
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,10 +23,21 @@ import ua.nure.smartcart.R.layout
 
 class AccountFragment : Fragment() {
 
+    private var logoutListener: OnAuthChangedListener? = null
+
     private lateinit var googleSignInOptions: GoogleSignInOptions
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var loginNameTextView: TextView
     private lateinit var userProfileImageView: ImageView
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnAuthChangedListener) {
+            logoutListener = context
+        } else {
+            throw RuntimeException("$context must implement OnLogoutListener")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +73,7 @@ class AccountFragment : Fragment() {
                 Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
                 loginNameTextView.text = "You are anonymous user"
                 userProfileImageView.setImageResource(R.drawable.anon_user)
+                logoutListener?.onChange()
             }
         }
 
@@ -81,6 +94,7 @@ class AccountFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java)
                 Toast.makeText(requireContext(), "Ok!", Toast.LENGTH_SHORT).show()
                 updateUI(account)
+                logoutListener?.onChange()
             } catch (e: ApiException) {
                 Toast.makeText(requireContext(), "Something went wrong: ${e.statusCode}", Toast.LENGTH_SHORT).show()
             }
@@ -100,4 +114,11 @@ class AccountFragment : Fragment() {
             userProfileImageView.setImageResource(R.drawable.anon_user)
         }
     }
+
+    interface OnAuthChangedListener {
+        fun onChange()
+    }
+
 }
+
+
