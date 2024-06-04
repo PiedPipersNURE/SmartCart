@@ -12,4 +12,8 @@
     <string name="menu_cart_selection">Cart Selection</string>
     <string name="menu_products">Products</string>
     <string name="menu_account">Account</string>
+    <string name="login_via_google">Login via Google</string>
+    <string name="logout">Logout</string>
+    <string name="you_are_anonymous_user">You are Anonymous User</string>
+    <string name="user_avatar">User Avatar</string>
 </resources>
