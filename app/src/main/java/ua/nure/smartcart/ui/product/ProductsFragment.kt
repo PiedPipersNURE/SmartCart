@@ -1,4 +1,4 @@
-package ua.nure.smartcart.ui.products
+package ua.nure.smartcart.ui.product
 
 import android.os.Bundle
 import android.view.LayoutInflater

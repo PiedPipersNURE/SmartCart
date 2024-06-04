@@ -1,4 +1,4 @@
-package ua.nure.smartcart.ui.gallery
+package ua.nure.smartcart.ui.cartselection
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import ua.nure.smartcart.databinding.FragmentGalleryBinding
+import ua.nure.smartcart.databinding.FragmentSlideshowBinding
 
-class CartGalleryFragment : Fragment() {
+class CartSelectionFragment : Fragment() {
 
-    private var _binding: FragmentGalleryBinding? = null
+    private var _binding: FragmentSlideshowBinding? = null
 
+    // This property is only valid between onCreateView and
+    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -20,14 +22,14 @@ class CartGalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val cartGalleryViewModel =
-            ViewModelProvider(this).get(CartGalleryViewModel::class.java)
+        val slideshowViewModel =
+            ViewModelProvider(this).get(CartSelectionViewModel::class.java)
 
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
+        _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textGallery
-        cartGalleryViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textSlideshow
+        slideshowViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
