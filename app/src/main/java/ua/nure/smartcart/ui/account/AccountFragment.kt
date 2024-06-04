@@ -6,9 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -19,6 +24,8 @@ class AccountFragment : Fragment() {
 
     private lateinit var googleSignInOptions: GoogleSignInOptions
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var loginNameTextView: TextView
+    private lateinit var userProfileImageView: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,11 +36,21 @@ class AccountFragment : Fragment() {
 
         val loginButton = root.findViewById<Button>(R.id.login_button)
         val logoutButton = root.findViewById<Button>(R.id.logout_button)
+        loginNameTextView = root.findViewById(R.id.login_name)
+        userProfileImageView = root.findViewById(R.id.user_profile_icon)
 
-        googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), googleSignInOptions)
 
-        val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        if (account != null) {
+            updateUI(account)
+        } else {
+            loginNameTextView.text = "Not signed in"
+        }
 
         loginButton.setOnClickListener {
             signIn()
@@ -42,6 +59,8 @@ class AccountFragment : Fragment() {
         logoutButton.setOnClickListener {
             googleSignInClient.signOut().addOnCompleteListener {
                 Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
+                loginNameTextView.text = "You are anonymous user"
+                userProfileImageView.setImageResource(R.drawable.anon_user)
             }
         }
 
@@ -58,13 +77,27 @@ class AccountFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1000) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-
             try {
-                task.getResult(ApiException::class.java)
+                val account = task.getResult(ApiException::class.java)
                 Toast.makeText(requireContext(), "Ok!", Toast.LENGTH_SHORT).show()
+                updateUI(account)
             } catch (e: ApiException) {
-                Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Something went wrong: ${e.statusCode}", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun updateUI(account: GoogleSignInAccount) {
+        loginNameTextView.text = account.displayName ?: "You are anonymous user"
+        account.photoUrl?.let { uri ->
+            Glide.with(this)
+                .load(uri)
+                .transform(CircleCrop())
+                .placeholder(R.drawable.anon_user)
+                .error(R.drawable.anon_user)
+                .into(userProfileImageView)
+        } ?: run {
+            userProfileImageView.setImageResource(R.drawable.anon_user)
         }
     }
 }

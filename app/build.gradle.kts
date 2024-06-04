@@ -1,3 +1,4 @@
+import smartcart.Glide
 import smartcart.GoogleAuth
 
 plugins {
@@ -55,4 +56,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(GoogleAuth.auth)
+    implementation(Glide.glide)
+    annotationProcessor(Glide.glideCompiler)
+    implementation(libs.material.v140)
 }
