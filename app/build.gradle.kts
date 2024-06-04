@@ -59,4 +59,6 @@ dependencies {
     implementation(Glide.glide)
     annotationProcessor(Glide.glideCompiler)
     implementation(libs.material.v140)
+    implementation("androidx.cardview:cardview:1.0.0")
+
 }

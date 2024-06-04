@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SmartCart"
 include(":app")
+include(":apiClient")
