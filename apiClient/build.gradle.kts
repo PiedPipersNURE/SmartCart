@@ -1,5 +1,11 @@
+import smartcart.Guava
+
 plugins {
     id("java-library")
+}
+
+dependencies{
+    implementation(Guava.guavaLib)
 }
 
 java {
