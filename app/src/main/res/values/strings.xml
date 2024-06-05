@@ -12,11 +12,13 @@
     <string name="menu_cart_selection">Cart Selection</string>
     <string name="menu_products">Products to buy</string>
     <string name="menu_account">Account</string>
-    <string name="login_via_google">Login via Google</string>
+    <string name="login_via_google">Login</string>
+    <string name="want_register">Register a new account</string>
     <string name="logout">Logout</string>
     <string name="you_are_anonymous_user">You are Anonymous User</string>
     <string name="user_avatar">User Avatar</string>
     <string name="quantity">Quantity</string>
     <string name="status">Status</string>
     <string name="product_name">Product Name</string>
+    <string name="or_text">or</string>
 </resources>

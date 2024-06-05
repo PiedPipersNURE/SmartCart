@@ -1,5 +1,6 @@
 package ua.nure.smartcart.ui.account
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -31,7 +32,14 @@ class AccountFragment : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var loginNameTextView: TextView
     private lateinit var userProfileImageView: ImageView
-
+    private lateinit var loginButton : Button
+    private lateinit var logoutButton : Button
+    private lateinit var loginPasswordTextView : TextView
+    private lateinit var loginEditText : TextView
+    private lateinit var orTextView : TextView
+    private lateinit var orTextView2 : TextView
+    private lateinit var googleLoginButton : ImageView
+    private lateinit var registerButton : Button
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnAuthChangedListener) {
@@ -48,10 +56,17 @@ class AccountFragment : Fragment() {
     ): View {
         val root = inflater.inflate(layout.fragment_account, container, false)
 
-        val loginButton = root.findViewById<Button>(R.id.login_button)
-        val logoutButton = root.findViewById<Button>(R.id.logout_button)
+        loginButton = root.findViewById(R.id.login_button)
+        logoutButton = root.findViewById(R.id.logout_button)
         loginNameTextView = root.findViewById(R.id.login_name)
         userProfileImageView = root.findViewById(R.id.user_profile_icon)
+        loginPasswordTextView = root.findViewById(R.id.login_password)
+        orTextView = root.findViewById(R.id.or_text1)
+        orTextView2 = root.findViewById(R.id.or_text2)
+        googleLoginButton = root.findViewById(R.id.login_google_button)
+        registerButton = root.findViewById(R.id.go_register_button)
+        loginEditText = root.findViewById(R.id.login_text)
+
 
         googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -62,12 +77,14 @@ class AccountFragment : Fragment() {
         val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
         if (account != null) {
             updateUI(account)
+            showLoginOption(false)
         } else {
             loginNameTextView.text = "Not signed in"
+            showLoginOption(true)
         }
 
-        loginButton.setOnClickListener {
-            signIn()
+        googleLoginButton.setOnClickListener {
+            signInWithGoogle()
         }
 
         logoutButton.setOnClickListener {
@@ -77,17 +94,41 @@ class AccountFragment : Fragment() {
         return root
     }
 
-    private fun signIn() {
+    private fun showLoginOption(b: Boolean) {
+        if (b) {
+            loginButton.visibility = View.VISIBLE
+            loginPasswordTextView.visibility = View.VISIBLE
+            orTextView.visibility = View.VISIBLE
+            orTextView2.visibility = View.VISIBLE
+            googleLoginButton.visibility = View.VISIBLE
+            registerButton.visibility = View.VISIBLE
+            loginEditText.visibility = View.VISIBLE
+            logoutButton.visibility = View.GONE
+        } else {
+            loginButton.visibility = View.GONE
+            loginPasswordTextView.visibility = View.GONE
+            loginEditText.visibility = View.GONE
+            orTextView.visibility = View.GONE
+            orTextView2.visibility = View.GONE
+            googleLoginButton.visibility = View.GONE
+            registerButton.visibility = View.GONE
+            logoutButton.visibility = View.VISIBLE
+        }
+    }
+
+    private fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, 1000)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun signOut() {
         googleSignInClient.signOut().addOnCompleteListener {
             Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
             loginNameTextView.text = "You are anonymous user"
             userProfileImageView.setImageResource(R.drawable.anon_user)
             logoutListener?.onChange()
+            showLoginOption(true)
         }
     }
 
@@ -103,6 +144,7 @@ class AccountFragment : Fragment() {
                 logoutListener?.onChange()
                 val accountDetails = getAccountDetails(account)
                 val session = ClientSession.getInstance(accountDetails)
+                showLoginOption(false)
             } catch (e: ApiException) {
                 Toast.makeText(requireContext(), "Something went wrong: ${e.statusCode}", Toast.LENGTH_SHORT).show()
             }
@@ -118,6 +160,7 @@ class AccountFragment : Fragment() {
     }
 
     private fun updateUI(account: GoogleSignInAccount) {
+
         loginNameTextView.text = account.displayName ?: "You are anonymous user"
         account.photoUrl?.let { uri ->
             Glide.with(this)
