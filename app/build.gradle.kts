@@ -1,5 +1,6 @@
 import smartcart.Glide
 import smartcart.GoogleAuth
+import smartcart.SmartCart
 
 plugins {
     alias(libs.plugins.android.application)
@@ -44,6 +45,8 @@ android {
 
 dependencies {
 
+    implementation(project(SmartCart.Modules.apiClient))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -59,6 +62,5 @@ dependencies {
     implementation(Glide.glide)
     annotationProcessor(Glide.glideCompiler)
     implementation(libs.material.v140)
-    implementation("androidx.cardview:cardview:1.0.0")
-
+    implementation(libs.androidx.cardview)
 }

@@ -24,19 +24,28 @@ public class CartMember {
      */
     private final String cartMemberId;
 
-    public CartMember(String memberId, String cartId, String cartMemberId) {
+    /**
+     * The name of the member.
+     */
+    private final String name;
+
+    public CartMember(String memberId, String cartId, String cartMemberId, String name) {
+
 
         checkNotNull(memberId, "Member id cannot be null");
         checkNotNull(cartId, "Cart id cannot be null");
         checkNotNull(cartMemberId, "Cart member id cannot be null");
+        checkNotNull(name, "Name cannot be null");
 
         checkArgument(!memberId.isEmpty(), "Member id cannot be empty");
         checkArgument(!cartId.isEmpty(), "Cart id cannot be empty");
-        checkArgument(!cartMemberId.isEmpty(),  "Cart member id cannot be empty");
+        checkArgument(!cartMemberId.isEmpty(), "Cart member id cannot be empty");
+        checkArgument(!name.isEmpty(), "Name cannot be empty");
 
         this.memberId = memberId;
         this.cartId = cartId;
         this.cartMemberId = cartMemberId;
+        this.name = name;
     }
 
     /**
@@ -64,5 +73,14 @@ public class CartMember {
      */
     public String cartMemberId() {
         return cartMemberId;
+    }
+
+    /**
+     * Returns the name of the member.
+     *
+     * @return the name of the member
+     */
+    public String name() {
+        return name;
     }
 }
