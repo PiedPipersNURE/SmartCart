@@ -1,4 +1,4 @@
-package ua.nure.apiclient.model;
+package ua.nure.apiclient.model.session;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

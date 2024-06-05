@@ -20,7 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import ua.nure.apiclient.ClientSession
-import ua.nure.apiclient.model.GoogleAccountDetails
+import ua.nure.apiclient.model.session.GoogleAccountDetails
 import ua.nure.smartcart.R
 import ua.nure.smartcart.R.layout
 import ua.nure.smartcart.ui.registration.RegistrationActivity
@@ -174,7 +174,11 @@ class AccountFragment : Fragment() {
         val email = account?.email
         val id = account?.id
 
-        return GoogleAccountDetails(email, username, id)
+        return GoogleAccountDetails(
+            email,
+            username,
+            id
+        )
     }
 
     private fun updateUI(account: GoogleSignInAccount) {

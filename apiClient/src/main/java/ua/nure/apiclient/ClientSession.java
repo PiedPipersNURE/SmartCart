@@ -2,47 +2,48 @@ package ua.nure.apiclient;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import ua.nure.apiclient.model.GoogleAccountDetails;
+import ua.nure.apiclient.model.session.GoogleAccountDetails;
+import ua.nure.apiclient.model.session.LoginDetails;
 
 /**
  * This is a singleton class that is used to manage the client session.
  */
 public class ClientSession {
 
-    /**
-     * This is an instance of the ClientSession class.
-     */
-    private static ClientSession instance;
+    private static boolean IsInSession = false;
 
-    /**
-     * This is a client that is used to interact with the SmartCart API.
-     */
-    private final SmartCartClient client;
+    private static SmartCartClient smartCartClient;
 
-    private ClientSession(GoogleAccountDetails account) {
-        checkNotNull(account, "The account cannot be null.");
-        client = new SmartCartClient(account);
+    private ClientSession() {
     }
 
-    /**
-     * This method is used to get the instance of the ClientSession class.
-     *
-     * @return The instance of the ClientSession class.
-     */
-    public static ClientSession getInstance(GoogleAccountDetails account) {
-        checkNotNull(account, "The account cannot be null.");
-        if (instance == null) {
-            instance = new ClientSession(account);
+    public static void startSessionWithGoogle(GoogleAccountDetails credentials) {
+        checkNotNull(credentials, "The credentials cannot be null.");
+        if (!IsInSession) {
+            smartCartClient = new SmartCartClient(credentials);
+            IsInSession = true;
         }
-        return instance;
     }
 
-    /**
-     * This method is used to get the client.
-     *
-     * @return The client.
-     */
-    public SmartCartClient getClient() {
-        return client;
+    public static void startSession(LoginDetails token) {
+        checkNotNull(token, "The token cannot be null.");
+        if (!IsInSession) {
+            smartCartClient = new SmartCartClient(token);
+            IsInSession = true;
+        }
+    }
+
+    public static void endSession() {
+        if (IsInSession) {
+            smartCartClient = null;
+            IsInSession = false;
+        }
+    }
+
+    public static SmartCartClient getSmartCartClient() {
+        if (IsInSession) {
+            return smartCartClient;
+        }
+        throw new IllegalStateException("The session is not started.");
     }
 }

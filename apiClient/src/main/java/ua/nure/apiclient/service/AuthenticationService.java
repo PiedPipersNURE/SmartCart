@@ -1,14 +1,22 @@
 package ua.nure.apiclient.service;
 
-import ua.nure.apiclient.model.GoogleAccountDetails;
+import ua.nure.apiclient.model.session.AuthToken;
+import ua.nure.apiclient.model.session.GoogleAccountDetails;
+import ua.nure.apiclient.model.session.LoginDetails;
 
 /**
  * This class is used to authenticate the user.
  */
 public class AuthenticationService {
-    private final GoogleAccountDetails account;
-    public AuthenticationService(GoogleAccountDetails account) {
-        this.account = account;
+
+    /**
+     * This method is used to authenticate the user.
+     *
+     * @return The token.
+     */
+    public AuthToken authenticate(LoginDetails loginDetails) {
+        // here we would authenticate the user and return the JWT token
+        return null;
     }
 
     /**
@@ -16,12 +24,8 @@ public class AuthenticationService {
      *
      * @return The token.
      */
-    public String authenticate() {
+    public AuthToken authenticate(GoogleAccountDetails googleAccountDetails) {
         // here we would authenticate the user and return the JWT token
         return null;
-    }
-
-    public GoogleAccountDetails account() {
-        return account;
     }
 }

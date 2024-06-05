@@ -1,6 +1,8 @@
 package ua.nure.apiclient;
 
-import ua.nure.apiclient.model.GoogleAccountDetails;
+import ua.nure.apiclient.model.session.AuthToken;
+import ua.nure.apiclient.model.session.GoogleAccountDetails;
+import ua.nure.apiclient.model.session.LoginDetails;
 import ua.nure.apiclient.service.AuthenticationService;
 import ua.nure.apiclient.service.CartService;
 import ua.nure.apiclient.service.MembersService;
@@ -14,13 +16,20 @@ public class SmartCartClient {
     private final CartService cartService;
     private final MembersService membersService;
     private final ProductService productService;
-    private final String token;
+    private final AuthToken token;
 
     public SmartCartClient(GoogleAccountDetails credentials) {
         this.cartService = new CartService();
         this.membersService = new MembersService();
         this.productService = new ProductService();
-        this.token = new AuthenticationService(credentials).authenticate();
+        this.token = new AuthenticationService().authenticate(credentials);
+    }
+
+    public SmartCartClient(LoginDetails credentials) {
+        this.cartService = new CartService();
+        this.membersService = new MembersService();
+        this.productService = new ProductService();
+        this.token = new AuthenticationService().authenticate(credentials);
     }
 
     /**
@@ -51,7 +60,7 @@ public class SmartCartClient {
      * This method is used to get the credentials.
      * @return The credentials.
      */
-    public String token() {
+    public AuthToken token() {
         return token;
     }
 }
