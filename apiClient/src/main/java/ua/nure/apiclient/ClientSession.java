@@ -1,5 +1,9 @@
 package ua.nure.apiclient;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import ua.nure.apiclient.model.GoogleAccountDetails;
+
 /**
  * This is a singleton class that is used to manage the client session.
  */
@@ -15,8 +19,9 @@ public class ClientSession {
      */
     private final SmartCartClient client;
 
-    private ClientSession(Credentials credentials) {
-        client = new SmartCartClient(credentials);
+    private ClientSession(GoogleAccountDetails account) {
+        checkNotNull(account, "The account cannot be null.");
+        client = new SmartCartClient(account);
     }
 
     /**
@@ -24,9 +29,10 @@ public class ClientSession {
      *
      * @return The instance of the ClientSession class.
      */
-    public static ClientSession getInstance(Credentials credentials) {
+    public static ClientSession getInstance(GoogleAccountDetails account) {
+        checkNotNull(account, "The account cannot be null.");
         if (instance == null) {
-            instance = new ClientSession(credentials);
+            instance = new ClientSession(account);
         }
         return instance;
     }

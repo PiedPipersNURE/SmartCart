@@ -1,7 +1,7 @@
 package ua.nure.apiclient;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import ua.nure.apiclient.model.GoogleAccountDetails;
+import ua.nure.apiclient.service.AuthenticationService;
 import ua.nure.apiclient.service.CartService;
 import ua.nure.apiclient.service.MembersService;
 import ua.nure.apiclient.service.ProductService;
@@ -14,13 +14,13 @@ public class SmartCartClient {
     private final CartService cartService;
     private final MembersService membersService;
     private final ProductService productService;
-    private final Credentials credentials;
+    private final String token;
 
-    public SmartCartClient(Credentials credentials) {
+    public SmartCartClient(GoogleAccountDetails credentials) {
         this.cartService = new CartService();
         this.membersService = new MembersService();
         this.productService = new ProductService();
-        this.credentials = checkNotNull(credentials);
+        this.token = new AuthenticationService(credentials).authenticate();
     }
 
     /**
@@ -51,7 +51,7 @@ public class SmartCartClient {
      * This method is used to get the credentials.
      * @return The credentials.
      */
-    public Credentials credentials() {
-        return credentials;
+    public String token() {
+        return token;
     }
 }

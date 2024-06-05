@@ -18,6 +18,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import ua.nure.apiclient.ClientSession
+import ua.nure.apiclient.model.GoogleAccountDetails
 import ua.nure.smartcart.R
 import ua.nure.smartcart.R.layout
 
@@ -69,12 +71,7 @@ class AccountFragment : Fragment() {
         }
 
         logoutButton.setOnClickListener {
-            googleSignInClient.signOut().addOnCompleteListener {
-                Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
-                loginNameTextView.text = "You are anonymous user"
-                userProfileImageView.setImageResource(R.drawable.anon_user)
-                logoutListener?.onChange()
-            }
+            signOut()
         }
 
         return root
@@ -83,6 +80,15 @@ class AccountFragment : Fragment() {
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, 1000)
+    }
+
+    private fun signOut() {
+        googleSignInClient.signOut().addOnCompleteListener {
+            Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
+            loginNameTextView.text = "You are anonymous user"
+            userProfileImageView.setImageResource(R.drawable.anon_user)
+            logoutListener?.onChange()
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -95,10 +101,20 @@ class AccountFragment : Fragment() {
                 Toast.makeText(requireContext(), "Ok!", Toast.LENGTH_SHORT).show()
                 updateUI(account)
                 logoutListener?.onChange()
+                val accountDetails = getAccountDetails(account)
+                val session = ClientSession.getInstance(accountDetails)
             } catch (e: ApiException) {
                 Toast.makeText(requireContext(), "Something went wrong: ${e.statusCode}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun getAccountDetails(account: GoogleSignInAccount?): GoogleAccountDetails? {
+        val username = account?.displayName
+        val email = account?.email
+        val id = account?.id
+
+        return GoogleAccountDetails(email, username, id)
     }
 
     private fun updateUI(account: GoogleSignInAccount) {
