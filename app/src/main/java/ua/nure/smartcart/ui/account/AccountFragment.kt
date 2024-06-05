@@ -23,6 +23,7 @@ import ua.nure.apiclient.ClientSession
 import ua.nure.apiclient.model.GoogleAccountDetails
 import ua.nure.smartcart.R
 import ua.nure.smartcart.R.layout
+import ua.nure.smartcart.ui.registration.RegistrationActivity
 
 class AccountFragment : Fragment() {
 
@@ -91,7 +92,24 @@ class AccountFragment : Fragment() {
             signOut()
         }
 
+        loginButton.setOnClickListener{
+            signIn()
+        }
+
+        registerButton.setOnClickListener{
+            register()
+        }
+
         return root
+    }
+
+    private fun register() {
+        val intent = Intent(activity, RegistrationActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun signIn() {
+        TODO("Not yet implemented")
     }
 
     private fun showLoginOption(b: Boolean) {
