@@ -2,9 +2,11 @@ package ua.nure.apiclient.service;
 
 import com.google.common.base.Preconditions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import ua.nure.apiclient.model.core.Cart;
 import ua.nure.apiclient.model.session.AuthToken;
@@ -36,6 +38,10 @@ public class CartService {
         this.baseUrl = baseUrl;
     }
 
+    public String authToken() {
+        return authToken;
+    }
+
     /**
      * This method is used to get all the carts.
      *
@@ -56,11 +62,6 @@ public class CartService {
 
         return cartParser.parseCarts(response);
     }
-
-    public String authToken() {
-        return authToken;
-    }
-
 
     /**
      * This method is used to add a cart.
@@ -117,5 +118,31 @@ public class CartService {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * This method is used to get all the carts of a specific owner.
+     *
+     * @param ownerId The owner ID.
+     * @return The list of {@link Cart}.
+     */
+    public List<Cart> getCartsByOwnerId(String ownerId) throws InterruptedException {
+
+        var carts = getAllCarts();
+        var ownerUuid = UUID.fromString(ownerId);
+
+        List<Cart> ownerCarts = new ArrayList<>();
+
+        for (Cart cart : carts) {
+
+            var cartUuid = UUID.fromString(cart.ownerId());
+
+            if (cartUuid.equals(ownerUuid)) {
+                ownerCarts.add(cart);
+            }
+
+        }
+
+        return ownerCarts;
     }
 }

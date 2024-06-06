@@ -46,7 +46,7 @@ class CartGalleryFragment : Fragment() {
         cartsAdapter = CartsAdapter(carts) { cart -> showDeleteCartDialog(cart) }
         recyclerView.adapter = cartsAdapter
 
-        carts.addAll(ClientSession.getSmartCartClient().cartService().getAllCarts())
+        carts.addAll(ClientSession.getSmartCartClient().cartService().getCartsByOwnerId(ClientSession.getUserId()))
 
         cartsAdapter.notifyDataSetChanged()
 
