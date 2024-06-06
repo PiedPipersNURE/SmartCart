@@ -22,14 +22,26 @@ public class GoogleAccountDetails {
         this.id = id;
     }
 
+    /**
+     * This method is used to get the email.
+     * @return The email.
+     */
     public String email() {
         return email;
     }
 
+    /**
+     * This method is used to get the username.
+     * @return The username.
+     */
     public String username() {
         return username;
     }
 
+    /**
+     * This method is used to get the id.
+     * @return The id.
+     */
     public String id() {
         return id;
     }

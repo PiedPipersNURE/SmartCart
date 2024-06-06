@@ -9,24 +9,21 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import ua.nure.apiclient.model.core.Product;
+import ua.nure.apiclient.model.core.CartMember;
 
-/**
- * This is a parser that is used to parse the products.
- */
-public class ProductParser {
+public class CartMemberParser {
 
     /**
-     * This method is used to parse the products.
+     * This method is used to parse the members of cart.
      * @param json The JSON.
-     * @return The list of products.
+     * @return The list of carts.
      */
-    public List<Product> parseProducts(String json) {
+    public List<CartMember> parseCarts(String json) {
         checkNotNull(json, "The JSON cannot be null.");
         checkArgument(!json.isEmpty(), "The JSON cannot be empty.");
 
         Gson gson = new Gson();
-        Type productListType = new TypeToken<List<Product>>(){}.getType();
+        Type productListType = new TypeToken<List<CartMember>>(){}.getType();
         return gson.fromJson(json, productListType);
     }
 }
