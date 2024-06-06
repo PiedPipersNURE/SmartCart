@@ -14,6 +14,8 @@ public class ClientSession {
 
     private static SmartCartClient smartCartClient;
 
+    private static String userEmail;
+
     private ClientSession() {
     }
 
@@ -27,6 +29,7 @@ public class ClientSession {
             try {
                 smartCartClient = new SmartCartClient(credentials);
                 IsInSession = true;
+                userEmail = credentials.email();
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Invalid credentials.");
             }
@@ -43,6 +46,7 @@ public class ClientSession {
             try {
                 smartCartClient = new SmartCartClient(credentials);
                 IsInSession = true;
+                userEmail = credentials.email();
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Invalid credentials.");
             }
@@ -56,6 +60,7 @@ public class ClientSession {
         if (IsInSession) {
             smartCartClient = null;
             IsInSession = false;
+            userEmail = "";
         }
     }
 
@@ -76,5 +81,13 @@ public class ClientSession {
      */
     public static boolean isInSession() {
         return IsInSession && !smartCartClient.token().IsEmpty();
+    }
+
+    /**
+     * This method is used to get the email of the user.
+     * @return The email of the user.
+     */
+    public static String getUserEmail() {
+        return userEmail;
     }
 }

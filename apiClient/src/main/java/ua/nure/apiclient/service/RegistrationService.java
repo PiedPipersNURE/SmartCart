@@ -22,7 +22,7 @@ public class RegistrationService {
                                         String fullName) {
 
         String requestBody = String.format("{\"Email\": \"%s\", \"Username\": \"%s\", " +
-                        "\"Password\": \"%s\", \"Fullname\": \"%s\", \"isGoogleAuth\": false}",
+                        "\"Password\": \"%s\", \"FullName\": \"%s\", \"isGoogleAuth\": false}",
                             email, username, password, fullName);
 
         UniversalRequestThread requestThread = new UniversalRequestThread(url, requestBody,

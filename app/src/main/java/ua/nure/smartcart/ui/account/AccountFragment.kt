@@ -42,6 +42,8 @@ class AccountFragment : Fragment() {
     private lateinit var orTextView2 : TextView
     private lateinit var googleLoginButton : ImageView
     private lateinit var registerButton : Button
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnAuthChangedListener) {
@@ -76,14 +78,13 @@ class AccountFragment : Fragment() {
 
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), googleSignInOptions)
 
-        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (account != null) {
             updateUI(account)
-            showLoginOption(false)
-        } else {
-            loginNameTextView.text = "Not signed in"
-            showLoginOption(true)
+            logoutListener?.onChangeGoogleAccount()
         }
+
+        showLoginOption(!ClientSession.isInSession())
 
         googleLoginButton.setOnClickListener {
             signInWithGoogle()
@@ -222,6 +223,9 @@ class AccountFragment : Fragment() {
         fun onChangeGoogleAccount()
     }
 
+    interface OnAuthListener {
+        fun onAuth()
+    }
 }
 
 

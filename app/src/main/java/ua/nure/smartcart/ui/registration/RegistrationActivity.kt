@@ -19,6 +19,7 @@ class RegistrationActivity : AppCompatActivity() {
         val passwordEditText = findViewById<EditText>(R.id.edit_text_password)
         val registerButton = findViewById<Button>(R.id.button_register)
         val fullNameEditText = findViewById<EditText>(R.id.edit_text_full_name)
+        val backButton = findViewById<Button>(R.id.back_to_login_button)
 
         registerButton.setOnClickListener {
             val username = usernameEditText.text.toString()
@@ -33,6 +34,10 @@ class RegistrationActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        backButton.setOnClickListener {
+            finish()
         }
     }
 }

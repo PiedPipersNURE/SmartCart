@@ -21,7 +21,7 @@ import ua.nure.apiclient.model.session.GoogleAccountDetails
 import ua.nure.smartcart.databinding.ActivityMainBinding
 import ua.nure.smartcart.ui.account.AccountFragment
 
-class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener {
+class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener, AccountFragment.OnAuthListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -101,6 +101,22 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
             userEmail.text = "Logged out"
             userName.text = "Anonymous user"
             profileIcon.setImageResource(R.drawable.anon_user)
+        }
+    }
+
+    override fun onAuth() {
+        val navView: NavigationView = binding.navView
+        val headerView = navView.getHeaderView(0)
+        val userEmail = headerView.findViewById<TextView>(R.id.user_email)
+        val userName = headerView.findViewById<TextView>(R.id.user_name)
+
+
+        if (ClientSession.isInSession()) {
+            userEmail.text = ClientSession.getUserEmail()
+            userName.text = "Guest"
+        }else{
+            userName.text = "Anonymous user"
+            userEmail.text = "Logged out"
         }
     }
 }

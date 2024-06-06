@@ -28,4 +28,5 @@
     <string name="register">Register</string>
     <string name="provide_your_information">Provide your information!</string>
     <string name="refresh">Refresh</string>
+    <string name="back_to_login">Back To Login</string>
 </resources>

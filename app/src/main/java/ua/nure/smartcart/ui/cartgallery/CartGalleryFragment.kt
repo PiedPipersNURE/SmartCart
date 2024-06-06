@@ -47,6 +47,7 @@ class CartGalleryFragment : Fragment() {
         // Example data
         carts.add(Cart("Cart 1"))
         carts.add(Cart("Cart 2"))
+
         cartsAdapter.notifyDataSetChanged()
 
         return root
