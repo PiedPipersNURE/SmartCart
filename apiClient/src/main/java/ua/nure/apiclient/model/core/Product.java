@@ -11,12 +11,12 @@ public class Product {
     /**
      * The unique identifier of the product.
      */
-    private final String productId;
+    private final String productID;
 
     /**
      * The assigned cart id of the product.
      */
-    private final String cartId;
+    private final String cartID;
 
     /**
      * The name of the product.
@@ -26,39 +26,39 @@ public class Product {
     /**
      * The assigned user id of the product.
      */
-    private final String buyerId;
+    private final String buyerID;
 
 
     /**
      * The quantity of the product.
      */
-    private int quantity;
+    private int productQuantity;
 
     /**
      * The estimated date of the product.
      */
-    private final String estimatedDate;
+    private final String endDate;
 
-    public Product(String productId, String cartId, String productName, String buyerId, int quantity, String estimatedDate) {
+    public Product(String productID, String cartID, String productName, String buyerID, int productQuantity, String endDate) {
 
-        checkNotNull(productId, "Product id cannot be null");
-        checkNotNull(cartId, "Cart id cannot be null");
+        checkNotNull(productID, "Product id cannot be null");
+        checkNotNull(cartID, "Cart id cannot be null");
         checkNotNull(productName, "Product name cannot be null");
-        checkNotNull(buyerId, "Buyer id cannot be null");
-        checkNotNull(estimatedDate, "Estimated date cannot be null");
+        checkNotNull(buyerID, "Buyer id cannot be null");
+        checkNotNull(endDate, "Estimated date cannot be null");
 
-        checkArgument(!productId.isEmpty(), "Product id cannot be empty");
-        checkArgument(!cartId.isEmpty(), "Cart id cannot be empty");
+        checkArgument(!productID.isEmpty(), "Product id cannot be empty");
+        checkArgument(!cartID.isEmpty(), "Cart id cannot be empty");
         checkArgument(!productName.isEmpty(), "Product name cannot be empty");
-        checkArgument(!buyerId.isEmpty(), "Buyer id cannot be empty");
-        checkArgument(quantity > 0, "Quantity cannot be less than 1");
+        checkArgument(!buyerID.isEmpty(), "Buyer id cannot be empty");
+        checkArgument(productQuantity > 0, "Quantity cannot be less than 1");
 
-        this.productId = productId;
-        this.cartId = cartId;
+        this.productID = productID;
+        this.cartID = cartID;
         this.productName = productName;
-        this.buyerId = buyerId;
-        this.quantity = quantity;
-        this.estimatedDate = estimatedDate;
+        this.buyerID = buyerID;
+        this.productQuantity = productQuantity;
+        this.endDate = endDate;
     }
 
     /**
@@ -67,7 +67,7 @@ public class Product {
      * @return the unique identifier of the product
      */
     public String productId() {
-        return productId;
+        return productID;
     }
 
     /**
@@ -76,7 +76,7 @@ public class Product {
      * @return the assigned cart id of the product
      */
     public String cartId() {
-        return cartId;
+        return cartID;
     }
 
     /**
@@ -94,7 +94,7 @@ public class Product {
      * @return the assigned user id of the product
      */
     public String buyerId() {
-        return buyerId;
+        return buyerID;
     }
 
     /**
@@ -103,7 +103,7 @@ public class Product {
      * @return the quantity of the product
      */
     public int quantity() {
-        return quantity;
+        return productQuantity;
     }
 
     /**
@@ -112,6 +112,6 @@ public class Product {
      * @return the estimated date of the product
      */
     public String estimatedDate() {
-        return estimatedDate;
+        return endDate;
     }
 }

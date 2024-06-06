@@ -33,8 +33,6 @@ public class AuthenticationService {
         }
     }
 
-
-
     /**
      * This method is used to authenticate the user.
      *

@@ -16,20 +16,19 @@ public class SmartCartClient {
     private final CartService cartService;
     private final MembersService membersService;
     private final ProductService productService;
-    private final AuthToken token;
+
+    private SmartCartClient(AuthToken token) {
+        this.cartService = new CartService(token, "http://172.22.22.69:5158");
+        this.membersService = new MembersService(token, "http://172.22.22.69:5158");
+        this.productService = new ProductService(token, "http://172.22.22.69:5158");
+    }
 
     public SmartCartClient(GoogleAccountDetails credentials) {
-        this.token = new AuthenticationService().authenticate(credentials);
-        this.cartService = new CartService(token);
-        this.membersService = new MembersService(token);
-        this.productService = new ProductService(token);
+        this(new AuthenticationService().authenticate(credentials));
     }
 
     public SmartCartClient(LoginDetails credentials) {
-        this.token = new AuthenticationService().authenticate(credentials);
-        this.cartService = new CartService(token);
-        this.membersService = new MembersService(token);
-        this.productService = new ProductService(token);
+        this(new AuthenticationService().authenticate(credentials));
     }
 
     /**
@@ -61,6 +60,6 @@ public class SmartCartClient {
      * @return The credentials.
      */
     public AuthToken token() {
-        return token;
+        return cartService.authToken();
     }
 }

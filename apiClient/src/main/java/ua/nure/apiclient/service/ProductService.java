@@ -1,27 +1,35 @@
 package ua.nure.apiclient.service;
 
-import java.util.ArrayList;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ua.nure.apiclient.model.core.Product;
 import ua.nure.apiclient.model.session.AuthToken;
+import ua.nure.apiclient.parser.ProductParser;
 import ua.nure.apiclient.request.GetRequestThread;
 
 /**
  * This is a service that is used to manage the products.
  */
 public class ProductService {
-    private final String baseUrl = "http://172.22.22.69:5158/api/Product/";
-    private final String authToken;
 
-    public ProductService(AuthToken authToken) {
+    private final String suffix = "/api/Product";
+    private final String baseUrl;
+    private final String authToken;
+    private final ProductParser productParser = new ProductParser();
+
+    public ProductService(AuthToken authToken, String baseUrl) {
+        checkNotNull(authToken, "The token cannot be null.");
+        checkNotNull(baseUrl, "The base URL cannot be null.");
+        this.baseUrl = baseUrl;
         this.authToken = authToken.token();
     }
 
-    public List<Product> getProducts() {
-        String url = baseUrl + "getAll";
+    public List<Product> getProducts() throws InterruptedException {
+        String url = baseUrl + suffix + "/getAll";
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + authToken);
@@ -29,16 +37,10 @@ public class ProductService {
         GetRequestThread getRequest = new GetRequestThread(url, headers);
         getRequest.start();
 
-        try {
-            getRequest.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        getRequest.join();
 
         String response = getRequest.getResponse();
 
-        List<Product> products = new ArrayList<>();
-
-        return products;
+        return productParser.parseProducts(response);
     }
 }
