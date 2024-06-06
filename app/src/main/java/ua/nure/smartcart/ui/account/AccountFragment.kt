@@ -29,6 +29,7 @@ import ua.nure.smartcart.ui.registration.RegistrationActivity
 class AccountFragment : Fragment() {
 
     private var logoutListener: OnAuthChangedListener? = null
+    private var onAuth: OnAuthListener? = null
 
     private lateinit var googleSignInOptions: GoogleSignInOptions
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -46,8 +47,9 @@ class AccountFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnAuthChangedListener) {
+        if (context is OnAuthChangedListener && context is OnAuthListener) {
             logoutListener = context
+            onAuth = context
         } else {
             throw RuntimeException("$context must implement OnLogoutListener")
         }
@@ -124,7 +126,9 @@ class AccountFragment : Fragment() {
 
         if (ClientSession.isInSession()) {
             Toast.makeText(requireContext(), "Logged in", Toast.LENGTH_SHORT).show()
+            loginNameTextView.text = ClientSession.getUserEmail()
             showLoginOption(false)
+            onAuth?.onAuth()
         }
     }
 
@@ -158,12 +162,12 @@ class AccountFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun signOut() {
         googleSignInClient.signOut().addOnCompleteListener {
+            ClientSession.endSession()
             Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
             loginNameTextView.text = "You are anonymous user"
             userProfileImageView.setImageResource(R.drawable.anon_user)
             logoutListener?.onChangeGoogleAccount()
             showLoginOption(true)
-            ClientSession.endSession()
         }
     }
 
@@ -175,12 +179,12 @@ class AccountFragment : Fragment() {
             try {
                 val account = task.getResult(ApiException::class.java)
                 updateUI(account)
-                logoutListener?.onChangeGoogleAccount()
                 val accountDetails = getAccountDetails(account)
                 ClientSession.startSessionWithGoogle(accountDetails)
                 if (ClientSession.isInSession()) {
                     Toast.makeText(requireContext(), "Logged in", Toast.LENGTH_SHORT).show()
                     showLoginOption(false)
+                    logoutListener?.onChangeGoogleAccount()
                 }else{
                     Toast.makeText(requireContext(), "Not logged in", Toast.LENGTH_SHORT).show()
                     showLoginOption(true)

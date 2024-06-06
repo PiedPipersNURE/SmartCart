@@ -55,7 +55,23 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
                 GoogleAccountDetails(email, displayName, idToken)
             )
         }
+
+        showControlNavItems(ClientSession.isInSession())
     }
+
+    private fun showControlNavItems(isInSession: Boolean) {
+        val navView: NavigationView = binding.navView
+        val menu = navView.menu
+
+        val navProducts = menu.findItem(R.id.nav_products)
+        val navCart = menu.findItem(R.id.nav_slideshow)
+        val navSelector = menu.findItem(R.id.nav_gallery)
+
+        navProducts.isVisible = isInSession
+        navCart.isVisible = isInSession
+        navSelector.isVisible = isInSession
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
@@ -102,6 +118,8 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
             userName.text = "Anonymous user"
             profileIcon.setImageResource(R.drawable.anon_user)
         }
+
+        showControlNavItems(ClientSession.isInSession())
     }
 
     override fun onAuth() {
@@ -118,5 +136,7 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
             userName.text = "Anonymous user"
             userEmail.text = "Logged out"
         }
+
+        showControlNavItems(ClientSession.isInSession())
     }
 }
