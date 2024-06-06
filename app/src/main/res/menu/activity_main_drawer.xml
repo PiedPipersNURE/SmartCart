@@ -11,14 +11,14 @@
         <item
             android:id="@+id/nav_account"
             android:icon="@drawable/account_icon"
-            android:title="@string/action_settings" />
+            android:title="@string/menu_account" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/cart_icon"
+            android:icon="@drawable/cart_add"
             android:title="@string/menu_cart" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/cart_add"
+            android:icon="@drawable/cart_icon"
             android:title="@string/menu_cart_selection" />
         <item
             android:id="@+id/nav_products"

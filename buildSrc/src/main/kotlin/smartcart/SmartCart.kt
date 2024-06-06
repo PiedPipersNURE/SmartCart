@@ -28,5 +28,6 @@ class SmartCart {
     object Modules {
         const val buildSrc = ":buildSrc"      // The BuildSrc module for custom build logic
         const val app = ":app"                // The Android App module
+        const val apiClient = ":apiClient"    // The API Client module
     }
 }
