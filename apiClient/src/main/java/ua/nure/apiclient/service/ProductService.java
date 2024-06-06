@@ -53,4 +53,27 @@ public class ProductService {
 
         return productParser.parseProducts(response);
     }
+
+    /**
+     * This method is used to get a product by its buyer id.
+     *
+     * @param id The id user assigned to buy this product.
+     * @return The product.
+     * @throws InterruptedException If the thread is interrupted.
+     */
+    public List<Product> getProductByBuyerId(String id) throws InterruptedException {
+        String url = baseUrl + suffix + "/getByUserId/" + id;
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+
+        GetRequestThread getRequest = new GetRequestThread(url, headers);
+        getRequest.start();
+
+        getRequest.join();
+
+        String response = getRequest.getResponse();
+
+        return productParser.parseProducts(response);
+    }
 }

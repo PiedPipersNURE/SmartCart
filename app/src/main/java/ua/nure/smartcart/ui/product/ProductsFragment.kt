@@ -29,8 +29,9 @@ class ProductsFragment : Fragment() {
         refreshButton = root.findViewById(R.id.refresh_button)
 
         refreshButton.setOnClickListener {
-            if (ClientSession.isInSession()){
-                val products = ClientSession.getSmartCartClient().productService().getProducts();
+            if (ClientSession.isInSession()) {
+                val products = ClientSession.getSmartCartClient().productService()
+                    .getProductByBuyerId(ClientSession.getUserId())
                 productsAdapter = ProductsAdapter(products)
                 recyclerView.adapter = productsAdapter
             }
