@@ -16,11 +16,16 @@ import ua.nure.apiclient.request.GetRequestThread;
  */
 public class ProductService {
 
-    private final String suffix = "/api/Product";
+    private static final String suffix = "/api/Product";
     private final String baseUrl;
     private final String authToken;
     private final ProductParser productParser = new ProductParser();
 
+    /**
+     * This is the constructor of the service.
+     * @param authToken The authentication token.
+     * @param baseUrl The base URL.
+     */
     public ProductService(AuthToken authToken, String baseUrl) {
         checkNotNull(authToken, "The token cannot be null.");
         checkNotNull(baseUrl, "The base URL cannot be null.");
@@ -28,6 +33,11 @@ public class ProductService {
         this.authToken = authToken.token();
     }
 
+    /**
+     * This method is used to get all the products.
+     * @return The list of products.
+     * @throws InterruptedException If the thread is interrupted.
+     */
     public List<Product> getProducts() throws InterruptedException {
         String url = baseUrl + suffix + "/getAll";
 

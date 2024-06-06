@@ -113,7 +113,18 @@ class AccountFragment : Fragment() {
         val details = LoginDetails(
             loginEditText.text.toString(),
             loginPasswordTextView.text.toString());
-        ClientSession.startSession(details)
+
+        try {
+            ClientSession.startSession(details)
+        }catch (e: Exception){
+            Toast.makeText(requireContext(), "Something went wrong: $e",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        if (ClientSession.isInSession()) {
+            Toast.makeText(requireContext(), "Logged in", Toast.LENGTH_SHORT).show()
+            showLoginOption(false)
+        }
     }
 
     private fun showLoginOption(b: Boolean) {
@@ -149,7 +160,7 @@ class AccountFragment : Fragment() {
             Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
             loginNameTextView.text = "You are anonymous user"
             userProfileImageView.setImageResource(R.drawable.anon_user)
-            logoutListener?.onChange()
+            logoutListener?.onChangeGoogleAccount()
             showLoginOption(true)
             ClientSession.endSession()
         }
@@ -163,7 +174,7 @@ class AccountFragment : Fragment() {
             try {
                 val account = task.getResult(ApiException::class.java)
                 updateUI(account)
-                logoutListener?.onChange()
+                logoutListener?.onChangeGoogleAccount()
                 val accountDetails = getAccountDetails(account)
                 ClientSession.startSessionWithGoogle(accountDetails)
                 if (ClientSession.isInSession()) {
@@ -173,8 +184,9 @@ class AccountFragment : Fragment() {
                     Toast.makeText(requireContext(), "Not logged in", Toast.LENGTH_SHORT).show()
                     showLoginOption(true)
                 }
-            } catch (e: ApiException) {
-                Toast.makeText(requireContext(), "Something went wrong: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Something went wrong: $e",
+                    Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -207,7 +219,7 @@ class AccountFragment : Fragment() {
     }
 
     interface OnAuthChangedListener {
-        fun onChange()
+        fun onChangeGoogleAccount()
     }
 
 }

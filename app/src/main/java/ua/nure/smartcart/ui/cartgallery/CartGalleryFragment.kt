@@ -30,8 +30,7 @@ class CartGalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val cartGalleryViewModel =
-            ViewModelProvider(this).get(CartGalleryViewModel::class.java)
+        ViewModelProvider(this)[CartGalleryViewModel::class.java]
 
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         val root: View = binding.root

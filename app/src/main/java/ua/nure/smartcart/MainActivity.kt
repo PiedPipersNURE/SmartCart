@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_account, R.id.nav_products
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
             .into(profileIcon)
     }
 
-    override fun onChange() {
+    override fun onChangeGoogleAccount() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account != null) {
             updateNavigationHeader(account)

@@ -17,22 +17,49 @@ public class SmartCartClient {
     private final MembersService membersService;
     private final ProductService productService;
 
-    private SmartCartClient(AuthToken token) {
-        this.cartService = new CartService(token, "http://172.22.22.69:5158");
-        this.membersService = new MembersService(token, "http://172.22.22.69:5158");
-        this.productService = new ProductService(token, "http://172.22.22.69:5158");
-    }
-
+    /**
+     * This constructor is used to create a SmartCart client with the given credentials.
+     *
+     * @param credentials The credentials.
+     */
     public SmartCartClient(GoogleAccountDetails credentials) {
-        this(new AuthenticationService().authenticate(credentials));
+        var tokenResult = new AuthenticationService().authenticate(credentials);
+
+        if (tokenResult.isPresent()) {
+            this.cartService = new CartService(tokenResult.get(),
+                    "http://172.22.22.69:5158");
+            this.membersService = new MembersService(tokenResult.get(),
+                    "http://172.22.22.69:5158");
+            this.productService = new ProductService(tokenResult.get(),
+                    "http://172.22.22.69:5158");
+        } else {
+            throw new IllegalArgumentException("Invalid credentials.");
+        }
     }
 
+    /**
+     * This constructor is used to create a SmartCart client with the given credentials.
+     *
+     * @param credentials The credentials.
+     */
     public SmartCartClient(LoginDetails credentials) {
-        this(new AuthenticationService().authenticate(credentials));
+        var tokenResult = new AuthenticationService().authenticate(credentials);
+
+        if (tokenResult.isPresent()) {
+            this.cartService = new CartService(tokenResult.get(),
+                    "http://172.22.22.69:5158");
+            this.membersService = new MembersService(tokenResult.get(),
+                    "http://172.22.22.69:5158");
+            this.productService = new ProductService(tokenResult.get(),
+                    "http://172.22.22.69:5158");
+        } else {
+            throw new IllegalArgumentException("Invalid credentials.");
+        }
     }
 
     /**
      * This method is used to get the cart service.
+     *
      * @return The cart service.
      */
     public CartService cartService() {
@@ -41,6 +68,7 @@ public class SmartCartClient {
 
     /**
      * This method is used to get the members service.
+     *
      * @return The members service.
      */
     public MembersService membersService() {
@@ -49,6 +77,7 @@ public class SmartCartClient {
 
     /**
      * This method is used to get the product service.
+     *
      * @return The product service.
      */
     public ProductService productService() {
@@ -57,6 +86,7 @@ public class SmartCartClient {
 
     /**
      * This method is used to get the credentials.
+     *
      * @return The credentials.
      */
     public AuthToken token() {
