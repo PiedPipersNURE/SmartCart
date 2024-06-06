@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * This is a class that is used to make a universal request to an API.
+ * This is a tool that is used to make a universal request to an API.
  */
 public class UniversalRequestThread extends Thread {
     protected final String url;

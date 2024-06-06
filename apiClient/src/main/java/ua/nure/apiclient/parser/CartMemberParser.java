@@ -18,7 +18,7 @@ public class CartMemberParser {
      * @param json The JSON.
      * @return The list of carts.
      */
-    public List<CartMember> parseCarts(String json) {
+    public List<CartMember> parseMembersInCart(String json) {
         checkNotNull(json, "The JSON cannot be null.");
         checkArgument(!json.isEmpty(), "The JSON cannot be empty.");
 

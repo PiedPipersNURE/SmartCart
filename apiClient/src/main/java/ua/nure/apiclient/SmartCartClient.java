@@ -24,14 +24,11 @@ public class SmartCartClient {
      */
     public SmartCartClient(GoogleAccountDetails credentials) {
         var tokenResult = new AuthenticationService().authenticate(credentials);
-
+        var baseUrl = "http://172.22.22.69:5158";
         if (tokenResult.isPresent()) {
-            this.cartService = new CartService(tokenResult.get(),
-                    "http://172.22.22.69:5158");
-            this.membersService = new MembersService(tokenResult.get(),
-                    "http://172.22.22.69:5158");
-            this.productService = new ProductService(tokenResult.get(),
-                    "http://172.22.22.69:5158");
+            this.cartService = new CartService(tokenResult.get(), baseUrl);
+            this.membersService = new MembersService(tokenResult.get(), baseUrl);
+            this.productService = new ProductService(tokenResult.get(), baseUrl);
         } else {
             throw new IllegalArgumentException("Invalid credentials.");
         }
