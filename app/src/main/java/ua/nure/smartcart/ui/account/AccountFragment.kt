@@ -19,7 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import ua.nure.apiclient.ClientSession
 import ua.nure.apiclient.model.session.GoogleAccountDetails
 import ua.nure.smartcart.R
 import ua.nure.smartcart.R.layout
@@ -161,7 +160,6 @@ class AccountFragment : Fragment() {
                 updateUI(account)
                 logoutListener?.onChange()
                 val accountDetails = getAccountDetails(account)
-                val session = ClientSession.getInstance(accountDetails)
                 showLoginOption(false)
             } catch (e: ApiException) {
                 Toast.makeText(requireContext(), "Something went wrong: ${e.statusCode}", Toast.LENGTH_SHORT).show()
