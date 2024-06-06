@@ -3,6 +3,8 @@ package ua.nure.apiclient.model.core;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.UUID;
+
 
 /**
  * This is a container of user goods. It is used to store goods that user wants to buy and
@@ -13,7 +15,7 @@ public class Cart {
     /**
      * The unique identifier of the cart.
      */
-    private final String cartId;
+    private final String cartID;
 
     /**
      * The name of the cart.
@@ -23,21 +25,32 @@ public class Cart {
     /**
      * The unique identifier of the owner of the cart.
      */
-    private final String ownerId;
+    private final String ownerID;
 
-    public Cart(String cartId, String cartName, String ownerId) {
+    public Cart(String cartName, String ownerID) {
 
-        checkNotNull(cartId, "Cart id cannot be null");
         checkNotNull(cartName,  "Cart name cannot be null");
-        checkNotNull(ownerId, "Owner id cannot be null");
 
-        checkArgument(!cartId.isEmpty(), "Cart id cannot be empty");
         checkArgument(!cartName.isEmpty(), "Cart name cannot be empty");
-        checkArgument(!ownerId.isEmpty(), "Owner id cannot be empty");
 
-        this.cartId = cartId;
         this.cartName = cartName;
-        this.ownerId = ownerId;
+        this.cartID = UUID.randomUUID().toString();
+        this.ownerID = ownerID;
+    }
+
+    public Cart(String cartID, String cartName, String ownerID) {
+
+        checkNotNull(cartID, "Cart id cannot be null");
+        checkNotNull(cartName,  "Cart name cannot be null");
+        checkNotNull(ownerID, "Owner id cannot be null");
+
+        checkArgument(!cartID.isEmpty(), "Cart id cannot be empty");
+        checkArgument(!cartName.isEmpty(), "Cart name cannot be empty");
+        checkArgument(!ownerID.isEmpty(), "Owner id cannot be empty");
+
+        this.cartID = cartID;
+        this.cartName = cartName;
+        this.ownerID = ownerID;
     }
 
     /**
@@ -55,7 +68,7 @@ public class Cart {
      * @return the unique identifier of the cart
      */
     public String cartId() {
-        return cartId;
+        return cartID;
     }
 
     /**
@@ -64,6 +77,6 @@ public class Cart {
      * @return the unique identifier of the owner of the cart
      */
     public String ownerId() {
-        return ownerId;
+        return ownerID;
     }
 }

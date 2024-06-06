@@ -1,6 +1,5 @@
 package ua.nure.apiclient;
 
-import ua.nure.apiclient.model.session.AuthToken;
 import ua.nure.apiclient.model.session.GoogleAccountDetails;
 import ua.nure.apiclient.model.session.LoginDetails;
 import ua.nure.apiclient.service.AuthenticationService;
@@ -86,7 +85,7 @@ public class SmartCartClient {
      *
      * @return The credentials.
      */
-    public AuthToken token() {
+    public String token() {
         return cartService.authToken();
     }
 }

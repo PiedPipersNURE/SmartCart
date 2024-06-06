@@ -2,6 +2,9 @@ package ua.nure.apiclient;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import ua.nure.apiclient.model.session.GoogleAccountDetails;
 import ua.nure.apiclient.model.session.LoginDetails;
 
@@ -80,7 +83,7 @@ public class ClientSession {
      * @return True if the session is started, false otherwise.
      */
     public static boolean isInSession() {
-        return IsInSession && !smartCartClient.token().IsEmpty();
+        return IsInSession && !smartCartClient.token().isEmpty();
     }
 
     /**
@@ -89,5 +92,25 @@ public class ClientSession {
      */
     public static String getUserEmail() {
         return userEmail;
+    }
+
+    /**
+     * This method is used to get the user id.
+     * @return The user id.
+     */
+    public static String getUserId() {
+
+        String token = smartCartClient.token();
+
+        if (isInSession()) {
+            try {
+                DecodedJWT jwt = JWT.decode(token);
+                return jwt.getClaim("UserID").asString();
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to decode the token.", e);
+            }
+        }
+
+        throw new IllegalStateException("The session is not started.");
     }
 }

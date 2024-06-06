@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import ua.nure.apiclient.model.session.AuthToken;
-import ua.nure.apiclient.request.UniversalRequestThread;
+import ua.nure.apiclient.request.PostPutRequestThread;
 
 /**
  * This is a service that is used to register the user.
@@ -25,7 +25,7 @@ public class RegistrationService {
                         "\"Password\": \"%s\", \"FullName\": \"%s\", \"isGoogleAuth\": false}",
                             email, username, password, fullName);
 
-        UniversalRequestThread requestThread = new UniversalRequestThread(url, requestBody,
+        PostPutRequestThread requestThread = new PostPutRequestThread(url, requestBody,
                 "POST", Map.of(), "application/json");
         requestThread.start();
 
