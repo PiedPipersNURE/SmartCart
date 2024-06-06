@@ -8,6 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * This is a class that is used to make a universal request to an API.
+ */
 public class UniversalRequestThread extends Thread {
     protected final String url;
     protected final String requestBody;

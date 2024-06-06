@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.nure.apiclient.ClientSession
+import ua.nure.apiclient.model.core.Product
 import ua.nure.smartcart.R
 
 class ProductsFragment : Fragment() {
@@ -36,6 +37,14 @@ class ProductsFragment : Fragment() {
             }
         }
 
+        val products = listOf(
+            Product("dfasfdafd", "fadfasfaf", "Milk", "adssadad", 10, "2021-10-10"),
+            Product("dfasfdafd", "fadfasfaf", "Bread", "adssadad", 5, "2021-10-10"),
+            Product("dfasfdafd", "fadfasfaf", "Butter", "adssadad", 2, "2021-10-10"),
+            Product("dfasfdafd", "fadfasfaf", "Cheese", "adssadad", 1, "2021-10-10"),
+        )
+
+        productsAdapter = ProductsAdapter(products)
         recyclerView.adapter = productsAdapter
 
         return root

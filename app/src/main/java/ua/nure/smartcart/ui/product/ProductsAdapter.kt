@@ -8,13 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ua.nure.apiclient.model.core.Product
 import ua.nure.smartcart.R
 
-data class Product(
-    val productName: String,
-    val productQuantity: Int,
-    val isBought: Boolean
-)
 
-class ProductsAdapter(private val products: MutableList<Product>) :
+class ProductsAdapter(private val products: List<Product>) :
     RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
 
     class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {

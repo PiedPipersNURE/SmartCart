@@ -9,8 +9,11 @@ import ua.nure.apiclient.model.core.Product;
 import ua.nure.apiclient.model.session.AuthToken;
 import ua.nure.apiclient.request.GetRequestThread;
 
+/**
+ * This is a service that is used to manage the products.
+ */
 public class ProductService {
-    private final String baseUrl = "http://172.22.22.69:5158/api/Cart/";
+    private final String baseUrl = "http://172.22.22.69:5158/api/Product/";
     private final String authToken;
 
     public ProductService(AuthToken authToken) {

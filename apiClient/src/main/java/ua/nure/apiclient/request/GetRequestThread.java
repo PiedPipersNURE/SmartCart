@@ -7,6 +7,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * This is a class that is used to make a GET request to an API.
+ */
 public class GetRequestThread extends Thread {
     private final String url;
     private String response;

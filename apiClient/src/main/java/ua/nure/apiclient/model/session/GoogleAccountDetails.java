@@ -2,6 +2,9 @@ package ua.nure.apiclient.model.session;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * This is a class that stores the details of a Google account.
+ */
 public class GoogleAccountDetails {
 
     private final String email;
