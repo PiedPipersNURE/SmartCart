@@ -4,15 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ua.nure.apiclient.ClientSession
 import ua.nure.smartcart.R
 
 class ProductsFragment : Fragment() {
 
     private lateinit var productsAdapter: ProductsAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var refreshButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,23 +26,16 @@ class ProductsFragment : Fragment() {
 
         recyclerView = root.findViewById(R.id.recycler_view_products)
         recyclerView.layoutManager = LinearLayoutManager(context)
+        refreshButton = root.findViewById(R.id.refresh_button)
 
-        // Example data
-        val products = listOf(
-            Product("Banana", 1, true),
-            Product("Apple", 20, false),
-            Product("Apple", 2, false),
-            Product("Apple", 2, false),
-            Product("Apple", 2, false),
-            Product("Apple", 2, false),
-            Product("Apple", 2, false),
-            Product("Apple", 2, false),
-            Product("Apple", 2, false),
-            Product("Apple", 2, false),
-            Product("Pineapple", 5, true)
-        )
+        refreshButton.setOnClickListener {
+            if (ClientSession.isInSession()){
+                val products = ClientSession.getSmartCartClient().productService().getProducts();
+                recyclerView.adapter = productsAdapter
+                productsAdapter = ProductsAdapter(products)
+            }
+        }
 
-        productsAdapter = ProductsAdapter(products)
         recyclerView.adapter = productsAdapter
 
         return root

@@ -1,22 +1,32 @@
 package ua.nure.apiclient.service;
 
-import ua.nure.apiclient.request.JWTRequestThread;
 
-/**
- * This is a service class that is used to register the user.
- */
+import java.util.Map;
+
+import ua.nure.apiclient.model.session.AuthToken;
+import ua.nure.apiclient.request.UniversalRequestThread;
+
 public class RegistrationService {
 
     /**
      * This method is used to register the user.
      */
-    public void register(String email, String username, String password, String fullName) {
-        // Construct the request body in JSON format
-        String requestBody = String.format("{\"email\": \"%s\", \"username\": \"%s\", \"password\": \"%s\", \"fullName\": \"%s\"}",
+    public AuthToken register(String email, String username, String password, String fullName) {
+        String requestBody = String.format("{\"Email\": \"%s\", \"Username\": \"%s\", \"Password\": \"%s\", \"Fullname\": \"%s\", \"isGoogleAuth\": false}",
                 email, username, password, fullName);
 
-        String url = "https://172.22.22.69:5160/account/registration";
-        JWTRequestThread requestThread = new JWTRequestThread(url, requestBody);
+        String url = "http://172.22.22.69:5160/account/registration";
+        UniversalRequestThread requestThread = new UniversalRequestThread(url, requestBody, "POST", Map.of(), "application/json");
         requestThread.start();
+
+        try {
+            requestThread.join();
+            String jwtToken = requestThread.getResponseToken();
+            return new AuthToken(jwtToken);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

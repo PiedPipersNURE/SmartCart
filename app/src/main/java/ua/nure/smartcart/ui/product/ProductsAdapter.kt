@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ua.nure.apiclient.model.core.Product
 import ua.nure.smartcart.R
 
 data class Product(
@@ -13,7 +14,7 @@ data class Product(
     val isBought: Boolean
 )
 
-class ProductsAdapter(private val products: List<Product>) :
+class ProductsAdapter(private val products: MutableList<Product>) :
     RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
 
     class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -30,9 +31,9 @@ class ProductsAdapter(private val products: List<Product>) :
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
-        holder.productName.text = product.productName
-        holder.productQuantity.text = product.productQuantity.dec().toString()
-        holder.productStatus.text = if (product.isBought) "Bought" else "In Cart"
+        holder.productName.text = product.productName()
+        holder.productQuantity.text = product.quantity().toString()
+        holder.productStatus.text = product.estimatedDate()
     }
 
     override fun getItemCount() = products.size

@@ -46,4 +46,8 @@ public class ClientSession {
         }
         throw new IllegalStateException("The session is not started.");
     }
+
+    public static boolean isInSession() {
+        return IsInSession && !smartCartClient.token().IsEmpty();
+    }
 }

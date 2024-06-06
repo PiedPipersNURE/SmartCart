@@ -19,7 +19,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import ua.nure.apiclient.ClientSession
 import ua.nure.apiclient.model.session.GoogleAccountDetails
+import ua.nure.apiclient.model.session.LoginDetails
 import ua.nure.smartcart.R
 import ua.nure.smartcart.R.layout
 import ua.nure.smartcart.ui.registration.RegistrationActivity
@@ -108,7 +110,10 @@ class AccountFragment : Fragment() {
     }
 
     private fun signIn() {
-        TODO("Not yet implemented")
+        val details = LoginDetails(
+            loginEditText.text.toString(),
+            loginPasswordTextView.text.toString());
+        ClientSession.startSession(details)
     }
 
     private fun showLoginOption(b: Boolean) {
@@ -146,6 +151,7 @@ class AccountFragment : Fragment() {
             userProfileImageView.setImageResource(R.drawable.anon_user)
             logoutListener?.onChange()
             showLoginOption(true)
+            ClientSession.endSession()
         }
     }
 
@@ -156,11 +162,17 @@ class AccountFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                Toast.makeText(requireContext(), "Ok!", Toast.LENGTH_SHORT).show()
                 updateUI(account)
                 logoutListener?.onChange()
                 val accountDetails = getAccountDetails(account)
-                showLoginOption(false)
+                ClientSession.startSessionWithGoogle(accountDetails)
+                if (ClientSession.isInSession()) {
+                    Toast.makeText(requireContext(), "Logged in", Toast.LENGTH_SHORT).show()
+                    showLoginOption(false)
+                }else{
+                    Toast.makeText(requireContext(), "Not logged in", Toast.LENGTH_SHORT).show()
+                    showLoginOption(true)
+                }
             } catch (e: ApiException) {
                 Toast.makeText(requireContext(), "Something went wrong: ${e.statusCode}", Toast.LENGTH_SHORT).show()
             }

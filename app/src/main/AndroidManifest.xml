@@ -10,6 +10,7 @@
         android:roundIcon="@drawable/smart_cart_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCart"
+        android:usesCleartextTraffic="true"
         >
         <activity
             android:name=".MainActivity"

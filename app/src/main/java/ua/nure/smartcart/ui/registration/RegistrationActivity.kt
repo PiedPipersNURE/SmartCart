@@ -27,7 +27,7 @@ class RegistrationActivity : AppCompatActivity() {
             val fullName = fullNameEditText.text.toString()
 
             if (username.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && fullName.isNotEmpty()) {
-                RegistrationService().register(username, email, password, fullName)
+                RegistrationService().register(email, username, password, fullName)
                 Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show()
                 finish()
             } else {

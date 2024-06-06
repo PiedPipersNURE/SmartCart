@@ -27,4 +27,5 @@
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="provide_your_information">Provide your information!</string>
+    <string name="refresh">Refresh</string>
 </resources>

@@ -12,6 +12,10 @@ public class AuthToken {
         return token;
     }
 
+    public boolean IsEmpty() {
+        return token.isEmpty();
+    }
+
     @Override
     public String toString() {
         return super.toString();

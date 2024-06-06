@@ -16,6 +16,8 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.navigation.NavigationView
+import ua.nure.apiclient.ClientSession
+import ua.nure.apiclient.model.session.GoogleAccountDetails
 import ua.nure.smartcart.databinding.ActivityMainBinding
 import ua.nure.smartcart.ui.account.AccountFragment
 
@@ -46,6 +48,12 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account != null) {
             updateNavigationHeader(account)
+            val email = account.email
+            val displayName = account.displayName
+            val idToken = account.id
+            ClientSession.startSessionWithGoogle(
+                GoogleAccountDetails(email, displayName, idToken)
+            )
         }
     }
 

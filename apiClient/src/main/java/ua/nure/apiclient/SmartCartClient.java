@@ -19,17 +19,17 @@ public class SmartCartClient {
     private final AuthToken token;
 
     public SmartCartClient(GoogleAccountDetails credentials) {
-        this.cartService = new CartService();
-        this.membersService = new MembersService();
-        this.productService = new ProductService();
         this.token = new AuthenticationService().authenticate(credentials);
+        this.cartService = new CartService(token);
+        this.membersService = new MembersService(token);
+        this.productService = new ProductService(token);
     }
 
     public SmartCartClient(LoginDetails credentials) {
-        this.cartService = new CartService();
-        this.membersService = new MembersService();
-        this.productService = new ProductService();
         this.token = new AuthenticationService().authenticate(credentials);
+        this.cartService = new CartService(token);
+        this.membersService = new MembersService(token);
+        this.productService = new ProductService(token);
     }
 
     /**
