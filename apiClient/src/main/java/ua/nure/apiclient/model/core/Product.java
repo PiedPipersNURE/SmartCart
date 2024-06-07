@@ -3,6 +3,8 @@ package ua.nure.apiclient.model.core;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.UUID;
+
 /**
  * This is a good that can be added to the cart. It is used to store information about the good.
  */
@@ -39,6 +41,8 @@ public class Product {
      */
     private final String endDate;
 
+    private boolean isBought = false;
+
     public Product(String productID, String cartID, String productName, String buyerID, int productQuantity, String endDate) {
 
         checkNotNull(productID, "Product id cannot be null");
@@ -59,6 +63,29 @@ public class Product {
         this.buyerID = buyerID;
         this.productQuantity = productQuantity;
         this.endDate = endDate;
+    }
+
+    public Product(String cartId, String productName, int quantity, String buyerId) {
+
+        checkNotNull(cartId, "Cart id cannot be null");
+        checkNotNull(productName, "Product name cannot be null");
+        checkNotNull(buyerId, "Buyer id cannot be null");
+        checkArgument(quantity > 0, "Quantity cannot be less than 1");
+
+        this.cartID = cartId;
+        this.productName = productName;
+        this.productQuantity = quantity;
+        this.productID = UUID.randomUUID().toString();
+        this.buyerID = buyerId;
+        this.endDate = null;
+    }
+
+    /**
+     * Returns the status of the product.
+     * @param bought the status of the product
+     */
+    public void setBought(boolean bought) {
+        isBought = bought;
     }
 
     /**
@@ -113,5 +140,14 @@ public class Product {
      */
     public String estimatedDate() {
         return endDate;
+    }
+
+    /**
+     * Returns the status of the product.
+     *
+     * @return the status of the product
+     */
+    public boolean isBought() {
+        return isBought;
     }
 }
