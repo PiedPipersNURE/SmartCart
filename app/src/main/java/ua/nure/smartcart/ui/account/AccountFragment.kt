@@ -210,7 +210,7 @@ class AccountFragment : Fragment() {
 
     private fun updateUI(account: GoogleSignInAccount) {
 
-        loginNameTextView.text = account.displayName ?: "You are anonymous user"
+        loginNameTextView.text = account.displayName ?: "Guest"
         account.photoUrl?.let { uri ->
             Glide.with(this)
                 .load(uri)

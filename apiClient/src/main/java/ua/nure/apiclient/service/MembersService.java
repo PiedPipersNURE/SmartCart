@@ -9,6 +9,7 @@ import java.util.Map;
 import ua.nure.apiclient.model.core.CartMember;
 import ua.nure.apiclient.model.session.AuthToken;
 import ua.nure.apiclient.parser.CartMemberParser;
+import ua.nure.apiclient.request.DeleteRequestThread;
 import ua.nure.apiclient.request.GetRequestThread;
 import ua.nure.apiclient.request.PostPutRequestThread;
 
@@ -97,7 +98,7 @@ public class MembersService {
         return members;
     }
 
-    public boolean addMember(String cartId, String memberEmail) {
+    public boolean addMember(String cartId, String memberEmail) throws InterruptedException {
         String url = baseUrl + suffix + "/addByGmail";
 
         Map<String, String> headers = new HashMap<>();
@@ -109,12 +110,22 @@ public class MembersService {
         PostPutRequestThread requestThread = new PostPutRequestThread(url, requestBody, "POST", headers, "application/json");
         requestThread.start();
 
-        try {
-            requestThread.join();
-        } catch (InterruptedException e) {
-            return false;
-        }
+        requestThread.join();
 
         return true;
+    }
+
+    public boolean removeMember(String cartId, String memberId) throws InterruptedException {
+        String url = baseUrl + suffix + "/removeByMemberAndCart/" + memberId + "/" + cartId;
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authToken);
+
+        DeleteRequestThread requestThread = new DeleteRequestThread(url, headers);
+        requestThread.start();
+
+        requestThread.join();
+
+        return requestThread.getResponse().equals("true");
     }
 }

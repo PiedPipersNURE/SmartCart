@@ -137,8 +137,13 @@ class CartSelectionFragment : Fragment() {
         builder.setTitle("Remove Member")
         builder.setMessage("Are you sure you want to remove this member?")
         builder.setPositiveButton("Yes") { dialog, _ ->
-            // remove member
-            membersAdapter.notifyDataSetChanged()
+            if (ClientSession.getSmartCartClient().membersService()
+                    .removeMember(member.cartId(), member.memberId())){
+                val members = ClientSession.getSmartCartClient().membersService()
+                    .getMembersByCartId(selectedCart!!.cartId())
+                updateMembers(members)
+                membersAdapter.notifyDataSetChanged()
+            }
             dialog.dismiss()
         }
         builder.setNegativeButton("No") { dialog, _ -> dialog.cancel() }
