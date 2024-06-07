@@ -14,10 +14,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import ua.nure.apiclient.ClientSession
+import ua.nure.apiclient.model.core.Cart
+import ua.nure.apiclient.model.core.CartMember
 import ua.nure.smartcart.R
 import ua.nure.smartcart.databinding.FragmentSlideshowBinding
 
-data class Cart(val cartName: String, val members: MutableList<Member>)
 
 class CartSelectionFragment : Fragment() {
 
@@ -29,12 +31,6 @@ class CartSelectionFragment : Fragment() {
     private lateinit var membersAdapter: MembersAdapter
     private lateinit var buttonAddMember: Button
 
-    private val carts = mutableListOf(
-        Cart("Cart 1", mutableListOf(Member("Member 1.1"), Member("Member 1.2"))),
-        Cart("Cart 2", mutableListOf(Member("Member 2.1"), Member("Member 2.2"), Member("Member 2.3"))),
-        Cart("Cart 3", mutableListOf(Member("Member 3.1"), Member("Member 3.2")))
-    )
-
     private var selectedCart: Cart? = null
 
     override fun onCreateView(
@@ -42,8 +38,7 @@ class CartSelectionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val slideshowViewModel =
-            ViewModelProvider(this).get(CartSelectionViewModel::class.java)
+        ViewModelProvider(this).get(CartSelectionViewModel::class.java)
 
         _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -53,15 +48,40 @@ class CartSelectionFragment : Fragment() {
         recyclerViewMembers.layoutManager = LinearLayoutManager(context)
         buttonAddMember = root.findViewById(R.id.button_add_member)
 
-        val cartNames = carts.map { it.cartName }
-        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, cartNames)
+        initializeSpinnerAndRecyclerView()
+
+        buttonAddMember.setOnClickListener { showAddMemberDialog() }
+
+        return root
+    }
+
+
+    private fun initializeSpinnerAndRecyclerView() {
+        spinnerCarts.setSelection(0) // Reset selection to the first item
+        val carts = ClientSession
+            .getSmartCartClient()
+            .cartService()
+            .getAllCarts()
+
+        val cartNames = carts.map { it.cartName() }
+        val spinnerAdapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, cartNames)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCarts.adapter = spinnerAdapter
 
         spinnerCarts.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                selectedCart = carts[position]
-                updateMembers(selectedCart!!.members)
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selectedCart = carts.getOrNull(position)
+                selectedCart?.let { cart ->
+                    val members = ClientSession.getSmartCartClient().membersService()
+                        .getMembersByCartId(cart.cartId())
+                    updateMembers(members)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -69,22 +89,22 @@ class CartSelectionFragment : Fragment() {
             }
         }
 
-        buttonAddMember.setOnClickListener { showAddMemberDialog() }
-
-        // Initialize with the first cart's members
         if (carts.isNotEmpty()) {
             selectedCart = carts[0]
-            updateMembers(selectedCart!!.members)
+            selectedCart?.let { cart ->
+                val members = ClientSession.getSmartCartClient().membersService()
+                    .getMembersByCartId(cart.cartId())
+                updateMembers(members)
+            }
         }
-
-        return root
     }
 
-    private fun updateMembers(members: MutableList<Member>) {
+
+    private fun updateMembers(members: MutableList<CartMember>) {
         membersAdapter = MembersAdapter(members) { member ->
             showRemoveMemberConfirmation(member)
         }
-                recyclerViewMembers.adapter = membersAdapter
+        recyclerViewMembers.adapter = membersAdapter
     }
 
     private fun showAddMemberDialog() {
@@ -95,10 +115,15 @@ class CartSelectionFragment : Fragment() {
         builder.setView(dialogView)
 
         builder.setPositiveButton("Add") { dialog, _ ->
-            val memberName = input.text.toString()
-            if (memberName.isNotEmpty()) {
-                selectedCart?.members?.add(Member(memberName))
-                membersAdapter.notifyDataSetChanged()
+            val memberEmail = input.text.toString()
+            if (memberEmail.isNotEmpty() && selectedCart != null) {
+                if (ClientSession.getSmartCartClient().membersService()
+                        .addMember(selectedCart!!.cartId(), memberEmail)){
+                    val members = ClientSession.getSmartCartClient().membersService()
+                        .getMembersByCartId(selectedCart!!.cartId())
+                    updateMembers(members)
+                    membersAdapter.notifyDataSetChanged()
+                }
             }
             dialog.dismiss()
         }
@@ -107,12 +132,12 @@ class CartSelectionFragment : Fragment() {
         builder.show()
     }
 
-    private fun showRemoveMemberConfirmation(member: Member) {
+    private fun showRemoveMemberConfirmation(member: CartMember) {
         val builder = MaterialAlertDialogBuilder(requireContext())
         builder.setTitle("Remove Member")
         builder.setMessage("Are you sure you want to remove this member?")
         builder.setPositiveButton("Yes") { dialog, _ ->
-            selectedCart?.members?.remove(member)
+            // remove member
             membersAdapter.notifyDataSetChanged()
             dialog.dismiss()
         }
@@ -126,4 +151,3 @@ class CartSelectionFragment : Fragment() {
         _binding = null
     }
 }
-

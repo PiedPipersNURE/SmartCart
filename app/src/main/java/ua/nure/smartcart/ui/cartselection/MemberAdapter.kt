@@ -6,13 +6,12 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ua.nure.apiclient.model.core.CartMember
 import ua.nure.smartcart.R
 
-data class Member(val memberName: String)
-
 class MembersAdapter(
-    private val members: MutableList<Member>,
-    private val onRemoveClick: (Member) -> Unit
+    private val members: MutableList<CartMember>,
+    private val onRemoveClick: (CartMember) -> Unit
 ) : RecyclerView.Adapter<MembersAdapter.MemberViewHolder>() {
 
     class MemberViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -28,7 +27,7 @@ class MembersAdapter(
 
     override fun onBindViewHolder(holder: MemberViewHolder, position: Int) {
         val member = members[position]
-        holder.memberName.text = member.memberName
+        holder.memberName.text = member.name()
         holder.removeButton.setOnClickListener {
             onRemoveClick(member)
         }
