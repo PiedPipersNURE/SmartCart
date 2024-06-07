@@ -1,5 +1,7 @@
 package ua.nure.apiclient.service;
 
+import java.util.Optional;
+
 import ua.nure.apiclient.model.session.AuthToken;
 import ua.nure.apiclient.model.session.GoogleAccountDetails;
 import ua.nure.apiclient.model.session.LoginDetails;
@@ -10,7 +12,12 @@ import ua.nure.apiclient.request.GetRequestThread;
  */
 public class AuthenticationService {
 
-    public AuthToken authenticate(LoginDetails loginDetails) {
+    /**
+     * This method is used to authenticate the user.
+     *
+     * @return {@link AuthToken} token.
+     */
+    public Optional<AuthToken> authenticate(LoginDetails loginDetails) {
         String email = loginDetails.email();
         String password = loginDetails.password();
         String url = "http://172.22.22.69:5160/account/login?email=" + email + "&password=" + password;
@@ -21,27 +28,27 @@ public class AuthenticationService {
         try {
             getRequest.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            return Optional.empty();
         }
 
         String response = getRequest.getResponse();
 
         if (response != null) {
-            return new AuthToken(response);
+            return Optional.of(new AuthToken(response));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
-
-
 
     /**
      * This method is used to authenticate the user.
      *
-     * @return The token.
+     * @return {@link AuthToken} token.
      */
-    public AuthToken authenticate(GoogleAccountDetails googleAccountDetails) {
-        String url = "http://172.22.22.69:5160/account/google-mobile-login?googleID=" + googleAccountDetails.id() + "&email=" + googleAccountDetails.email() + "&username=" + googleAccountDetails.username();
+    public Optional<AuthToken> authenticate(GoogleAccountDetails googleAccountDetails) {
+        String url = "http://172.22.22.69:5160/account/google-mobile-login?googleID=" +
+                googleAccountDetails.id() + "&email=" + googleAccountDetails.email() +
+                "&username=" + googleAccountDetails.username();
 
         GetRequestThread getRequest = new GetRequestThread(url);
         getRequest.start();
@@ -49,15 +56,15 @@ public class AuthenticationService {
         try {
             getRequest.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            return Optional.empty();
         }
 
         String response = getRequest.getResponse();
 
         if (response != null) {
-            return new AuthToken(response);
+            return Optional.of(new AuthToken(response));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 }

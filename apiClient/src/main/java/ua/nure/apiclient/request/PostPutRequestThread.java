@@ -9,9 +9,9 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * This is a class that is used to make a universal request to an API.
+ * This is a tool that is used to make a universal request to an API.
  */
-public class UniversalRequestThread extends Thread {
+public class PostPutRequestThread extends Thread {
     protected final String url;
     protected final String requestBody;
     protected final String requestMethod;
@@ -20,7 +20,7 @@ public class UniversalRequestThread extends Thread {
     protected String responseToken;
     protected final Object lock = new Object();
 
-    public UniversalRequestThread(String url, String requestBody, String requestMethod, Map<String, String> headers, String contentType) {
+    public PostPutRequestThread(String url, String requestBody, String requestMethod, Map<String, String> headers, String contentType) {
         this.url = url;
         this.requestBody = requestBody;
         this.requestMethod = requestMethod;

@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import ua.nure.apiclient.ClientSession
+import ua.nure.apiclient.model.core.Cart
 import ua.nure.smartcart.R
 import ua.nure.smartcart.databinding.FragmentGalleryBinding
 
@@ -30,8 +32,7 @@ class CartGalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val cartGalleryViewModel =
-            ViewModelProvider(this).get(CartGalleryViewModel::class.java)
+        ViewModelProvider(this)[CartGalleryViewModel::class.java]
 
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -45,9 +46,8 @@ class CartGalleryFragment : Fragment() {
         cartsAdapter = CartsAdapter(carts) { cart -> showDeleteCartDialog(cart) }
         recyclerView.adapter = cartsAdapter
 
-        // Example data
-        carts.add(Cart("Cart 1"))
-        carts.add(Cart("Cart 2"))
+        carts.addAll(ClientSession.getSmartCartClient().cartService().getCartsByOwnerId(ClientSession.getUserId()))
+
         cartsAdapter.notifyDataSetChanged()
 
         return root
@@ -63,7 +63,9 @@ class CartGalleryFragment : Fragment() {
         builder.setPositiveButton("Add") { dialog, _ ->
             val cartName = input.text.toString()
             if (cartName.isNotEmpty()) {
-                carts.add(Cart(cartName))
+                val newCart = Cart(cartName, ClientSession.getUserId())
+                carts.add(newCart)
+                ClientSession.getSmartCartClient().cartService().addCart(newCart)
                 cartsAdapter.notifyItemInserted(carts.size - 1)
             }
             dialog.dismiss()
@@ -79,6 +81,7 @@ class CartGalleryFragment : Fragment() {
         builder.setMessage("Are you sure you want to delete this cart?")
         builder.setPositiveButton("Yes") { dialog, _ ->
             val position = carts.indexOf(cart)
+            ClientSession.getSmartCartClient().cartService().deleteCart(cart)
             if (position != -1) {
                 carts.removeAt(position)
                 cartsAdapter.notifyItemRemoved(position)

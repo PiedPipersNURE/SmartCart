@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.nure.apiclient.ClientSession
-import ua.nure.apiclient.model.core.Product
 import ua.nure.smartcart.R
 
 class ProductsFragment : Fragment() {
@@ -30,21 +29,15 @@ class ProductsFragment : Fragment() {
         refreshButton = root.findViewById(R.id.refresh_button)
 
         refreshButton.setOnClickListener {
-            if (ClientSession.isInSession()){
-                val products = ClientSession.getSmartCartClient().productService().getProducts();
-                recyclerView.adapter = productsAdapter
+            if (ClientSession.isInSession()) {
+                val products = ClientSession.getSmartCartClient().productService()
+                    .getProductByBuyerId(ClientSession.getUserId())
                 productsAdapter = ProductsAdapter(products)
+                recyclerView.adapter = productsAdapter
             }
         }
 
-        val products = listOf(
-            Product("dfasfdafd", "fadfasfaf", "Milk", "adssadad", 10, "2021-10-10"),
-            Product("dfasfdafd", "fadfasfaf", "Bread", "adssadad", 5, "2021-10-10"),
-            Product("dfasfdafd", "fadfasfaf", "Butter", "adssadad", 2, "2021-10-10"),
-            Product("dfasfdafd", "fadfasfaf", "Cheese", "adssadad", 1, "2021-10-10"),
-        )
-
-        productsAdapter = ProductsAdapter(products)
+        productsAdapter = ProductsAdapter(emptyList())
         recyclerView.adapter = productsAdapter
 
         return root

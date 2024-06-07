@@ -8,19 +8,28 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * This is a tool that is used to make a GET request to an API.
+ * This is a tool that is used to make a DELETE request to an API.
  */
-public class GetRequestThread extends Thread {
+public class DeleteRequestThread extends Thread {
     private final String url;
     private String response;
     private Map<String, String> headers;
     private final Object lock = new Object();
 
-    public GetRequestThread(String url) {
+    /**
+     * This is the constructor of the class.
+     * @param url The URL of the API.
+     */
+    public DeleteRequestThread(String url) {
         this.url = url;
     }
 
-    public GetRequestThread(String url, Map<String, String> headers) {
+    /**
+     * This is the constructor of the class.
+     * @param url The URL of the API.
+     * @param headers The headers of the request.
+     */
+    public DeleteRequestThread(String url, Map<String, String> headers) {
         this.url = url;
         this.headers = headers;
     }
@@ -31,7 +40,7 @@ public class GetRequestThread extends Thread {
         try {
             URL apiUrl = new URL(url);
             connection = (HttpURLConnection) apiUrl.openConnection();
-            connection.setRequestMethod("GET");
+            connection.setRequestMethod("DELETE");
 
             if (headers != null) {
                 for (Map.Entry<String, String> entry : headers.entrySet()) {

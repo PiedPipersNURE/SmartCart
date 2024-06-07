@@ -6,9 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ua.nure.apiclient.model.core.Cart
 import ua.nure.smartcart.R
-
-data class Cart(val cartName: String)
 
 class CartsAdapter(private val carts: MutableList<Cart>, private val onDeleteClick: (Cart) -> Unit) :
     RecyclerView.Adapter<CartsAdapter.CartViewHolder>() {
@@ -26,7 +25,7 @@ class CartsAdapter(private val carts: MutableList<Cart>, private val onDeleteCli
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val cart = carts[position]
-        holder.cartName.text = cart.cartName
+        holder.cartName.text = cart.cartName()
         holder.deleteButton.setOnClickListener {
             onDeleteClick(cart)
         }

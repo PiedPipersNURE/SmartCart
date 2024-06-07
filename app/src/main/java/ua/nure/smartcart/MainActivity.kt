@@ -21,7 +21,7 @@ import ua.nure.apiclient.model.session.GoogleAccountDetails
 import ua.nure.smartcart.databinding.ActivityMainBinding
 import ua.nure.smartcart.ui.account.AccountFragment
 
-class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener {
+class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener, AccountFragment.OnAuthListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_account, R.id.nav_products
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -55,7 +55,23 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
                 GoogleAccountDetails(email, displayName, idToken)
             )
         }
+
+        showControlNavItems(ClientSession.isInSession())
     }
+
+    private fun showControlNavItems(isInSession: Boolean) {
+        val navView: NavigationView = binding.navView
+        val menu = navView.menu
+
+        val navProducts = menu.findItem(R.id.nav_products)
+        val navCart = menu.findItem(R.id.nav_slideshow)
+        val navSelector = menu.findItem(R.id.nav_gallery)
+
+        navProducts.isVisible = isInSession
+        navCart.isVisible = isInSession
+        navSelector.isVisible = isInSession
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
@@ -87,7 +103,7 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
             .into(profileIcon)
     }
 
-    override fun onChange() {
+    override fun onChangeGoogleAccount() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account != null) {
             updateNavigationHeader(account)
@@ -102,5 +118,25 @@ class MainActivity : AppCompatActivity() , AccountFragment.OnAuthChangedListener
             userName.text = "Anonymous user"
             profileIcon.setImageResource(R.drawable.anon_user)
         }
+
+        showControlNavItems(ClientSession.isInSession())
+    }
+
+    override fun onAuth() {
+        val navView: NavigationView = binding.navView
+        val headerView = navView.getHeaderView(0)
+        val userEmail = headerView.findViewById<TextView>(R.id.user_email)
+        val userName = headerView.findViewById<TextView>(R.id.user_name)
+
+
+        if (ClientSession.isInSession()) {
+            userEmail.text = ClientSession.getUserEmail()
+            userName.text = "Guest"
+        }else{
+            userName.text = "Anonymous user"
+            userEmail.text = "Logged out"
+        }
+
+        showControlNavItems(ClientSession.isInSession())
     }
 }

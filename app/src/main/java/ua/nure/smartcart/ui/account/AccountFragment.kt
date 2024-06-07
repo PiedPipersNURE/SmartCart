@@ -29,6 +29,7 @@ import ua.nure.smartcart.ui.registration.RegistrationActivity
 class AccountFragment : Fragment() {
 
     private var logoutListener: OnAuthChangedListener? = null
+    private var onAuth: OnAuthListener? = null
 
     private lateinit var googleSignInOptions: GoogleSignInOptions
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -42,10 +43,13 @@ class AccountFragment : Fragment() {
     private lateinit var orTextView2 : TextView
     private lateinit var googleLoginButton : ImageView
     private lateinit var registerButton : Button
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnAuthChangedListener) {
+        if (context is OnAuthChangedListener && context is OnAuthListener) {
             logoutListener = context
+            onAuth = context
         } else {
             throw RuntimeException("$context must implement OnLogoutListener")
         }
@@ -76,14 +80,13 @@ class AccountFragment : Fragment() {
 
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), googleSignInOptions)
 
-        val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (account != null) {
             updateUI(account)
-            showLoginOption(false)
-        } else {
-            loginNameTextView.text = "Not signed in"
-            showLoginOption(true)
+            logoutListener?.onChangeGoogleAccount()
         }
+
+        showLoginOption(!ClientSession.isInSession())
 
         googleLoginButton.setOnClickListener {
             signInWithGoogle()
@@ -113,7 +116,20 @@ class AccountFragment : Fragment() {
         val details = LoginDetails(
             loginEditText.text.toString(),
             loginPasswordTextView.text.toString());
-        ClientSession.startSession(details)
+
+        try {
+            ClientSession.startSession(details)
+        }catch (e: Exception){
+            Toast.makeText(requireContext(), "Something went wrong: $e",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        if (ClientSession.isInSession()) {
+            Toast.makeText(requireContext(), "Logged in", Toast.LENGTH_SHORT).show()
+            loginNameTextView.text = ClientSession.getUserEmail()
+            showLoginOption(false)
+            onAuth?.onAuth()
+        }
     }
 
     private fun showLoginOption(b: Boolean) {
@@ -146,12 +162,12 @@ class AccountFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun signOut() {
         googleSignInClient.signOut().addOnCompleteListener {
+            ClientSession.endSession()
             Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
             loginNameTextView.text = "You are anonymous user"
             userProfileImageView.setImageResource(R.drawable.anon_user)
-            logoutListener?.onChange()
+            logoutListener?.onChangeGoogleAccount()
             showLoginOption(true)
-            ClientSession.endSession()
         }
     }
 
@@ -163,18 +179,19 @@ class AccountFragment : Fragment() {
             try {
                 val account = task.getResult(ApiException::class.java)
                 updateUI(account)
-                logoutListener?.onChange()
                 val accountDetails = getAccountDetails(account)
                 ClientSession.startSessionWithGoogle(accountDetails)
                 if (ClientSession.isInSession()) {
                     Toast.makeText(requireContext(), "Logged in", Toast.LENGTH_SHORT).show()
                     showLoginOption(false)
+                    logoutListener?.onChangeGoogleAccount()
                 }else{
                     Toast.makeText(requireContext(), "Not logged in", Toast.LENGTH_SHORT).show()
                     showLoginOption(true)
                 }
-            } catch (e: ApiException) {
-                Toast.makeText(requireContext(), "Something went wrong: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Something went wrong: $e",
+                    Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -193,7 +210,7 @@ class AccountFragment : Fragment() {
 
     private fun updateUI(account: GoogleSignInAccount) {
 
-        loginNameTextView.text = account.displayName ?: "You are anonymous user"
+        loginNameTextView.text = account.displayName ?: "Guest"
         account.photoUrl?.let { uri ->
             Glide.with(this)
                 .load(uri)
@@ -207,9 +224,12 @@ class AccountFragment : Fragment() {
     }
 
     interface OnAuthChangedListener {
-        fun onChange()
+        fun onChangeGoogleAccount()
     }
 
+    interface OnAuthListener {
+        fun onAuth()
+    }
 }
 
 

@@ -12,39 +12,45 @@ public class CartMember {
     /**
      * The unique identifier of the member.
      */
-    private final String memberId;
+    private final String memberID;
 
     /**
      * The unique identifier of the cart.
      */
-    private final String cartId;
+    private final String cartID;
 
     /**
      * The unique identifier of member in the cart.
      */
-    private final String cartMemberId;
+    private final String cartMemberID;
 
     /**
      * The name of the member.
      */
-    private final String name;
+    private String name;
 
-    public CartMember(String memberId, String cartId, String cartMemberId, String name) {
+    public CartMember(String memberID, String cartID, String cartMemberID, String name) {
 
 
-        checkNotNull(memberId, "Member id cannot be null");
-        checkNotNull(cartId, "Cart id cannot be null");
-        checkNotNull(cartMemberId, "Cart member id cannot be null");
+        checkNotNull(memberID, "Member id cannot be null");
+        checkNotNull(cartID, "Cart id cannot be null");
+        checkNotNull(cartMemberID, "Cart member id cannot be null");
         checkNotNull(name, "Name cannot be null");
 
-        checkArgument(!memberId.isEmpty(), "Member id cannot be empty");
-        checkArgument(!cartId.isEmpty(), "Cart id cannot be empty");
-        checkArgument(!cartMemberId.isEmpty(), "Cart member id cannot be empty");
+        checkArgument(!memberID.isEmpty(), "Member id cannot be empty");
+        checkArgument(!cartID.isEmpty(), "Cart id cannot be empty");
+        checkArgument(!cartMemberID.isEmpty(), "Cart member id cannot be empty");
         checkArgument(!name.isEmpty(), "Name cannot be empty");
 
-        this.memberId = memberId;
-        this.cartId = cartId;
-        this.cartMemberId = cartMemberId;
+        this.memberID = memberID;
+        this.cartID = cartID;
+        this.cartMemberID = cartMemberID;
+        this.name = name;
+    }
+
+    public void setName(String name) {
+        checkNotNull(name, "Name cannot be null");
+        checkArgument(!name.isEmpty(), "Name cannot be empty");
         this.name = name;
     }
 
@@ -54,7 +60,7 @@ public class CartMember {
      * @return the unique identifier of the member
      */
     public String memberId() {
-        return memberId;
+        return memberID;
     }
 
     /**
@@ -63,7 +69,7 @@ public class CartMember {
      * @return the unique identifier of the cart
      */
     public String cartId() {
-        return cartId;
+        return cartID;
     }
 
     /**
@@ -72,7 +78,7 @@ public class CartMember {
      * @return the unique identifier of member in the cart
      */
     public String cartMemberId() {
-        return cartMemberId;
+        return cartMemberID;
     }
 
     /**
