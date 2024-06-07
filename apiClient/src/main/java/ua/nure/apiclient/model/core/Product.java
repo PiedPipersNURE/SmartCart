@@ -41,8 +41,21 @@ public class Product {
      */
     private final String endDate;
 
+    /**
+     * The status of the product. Could be {@code true} if the product is bought or {@code false}
+     * if the product is not bought yet.
+     */
     private boolean isBought = false;
 
+    /**
+     * Creates a new product.
+     * @param productID
+     * @param cartID
+     * @param productName
+     * @param buyerID
+     * @param productQuantity
+     * @param endDate
+     */
     public Product(String productID, String cartID, String productName, String buyerID, int productQuantity, String endDate) {
 
         checkNotNull(productID, "Product id cannot be null");
@@ -65,6 +78,13 @@ public class Product {
         this.endDate = endDate;
     }
 
+    /**
+     * Creates a new product.
+     * @param cartId
+     * @param productName
+     * @param quantity
+     * @param buyerId
+     */
     public Product(String cartId, String productName, int quantity, String buyerId) {
 
         checkNotNull(cartId, "Cart id cannot be null");

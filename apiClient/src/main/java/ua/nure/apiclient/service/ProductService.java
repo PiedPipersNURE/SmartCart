@@ -84,17 +84,15 @@ public class ProductService {
     /**
      * This method is used to get a product by its id and cart id.
      *
-     * @param userid The id of the user.
      * @param cartId The id of the cart.
      * @return The product.
      * @throws InterruptedException If the thread is interrupted.
      */
-    public List<Product> getProductByIdAndCartId(String userid, String cartId) throws InterruptedException {
-        String url = baseUrl + suffix + "/getByCartAndUser/" + cartId + "/" + userid;
+    public List<Product> getProductCartId(String cartId) throws InterruptedException {
+        String url = baseUrl + suffix + "/getByCart/" + cartId;
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + authToken);
-
         GetRequestThread getRequest = new GetRequestThread(url, headers);
         getRequest.start();
 
@@ -143,7 +141,12 @@ public class ProductService {
         return Optional.of(product);
     }
 
-
+    /**
+     * This method is used to change the status of a product.
+     * @param product The product.
+     * @return {@code true} if the product status is changed, false otherwise.
+     * @throws InterruptedException If the thread is interrupted.
+     */
     public boolean changeProductStatus(Product product) throws InterruptedException {
 
         String url = baseUrl + suffix + "/update";

@@ -110,7 +110,7 @@ class HomeFragment : Fragment() {
                 selectedCart = carts.getOrNull(position)
                 selectedCart?.let { cart ->
                     val products = ClientSession.getSmartCartClient().productService()
-                        .getProductByIdAndCartId(ClientSession.getUserId(),cart.cartId())
+                        .getProductCartId(cart.cartId())
                     updateProducts(products)
                 }
             }
@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
             selectedCart = carts[0]
             selectedCart?.let { cart ->
                 val products = ClientSession.getSmartCartClient().productService()
-                    .getProductByIdAndCartId(ClientSession.getUserId(),cart.cartId())
+                    .getProductCartId(cart.cartId())
                 updateProducts(products)
             }
         }
@@ -154,7 +154,7 @@ class HomeFragment : Fragment() {
                     .addProductToCart(selectedCart!!.cartId(), productName, quantity, ClientSession.getUserId())
                 if (result.isPresent) {
                     val products = ClientSession.getSmartCartClient().productService()
-                        .getProductByIdAndCartId(ClientSession.getUserId(),selectedCart!!.cartId())
+                        .getProductCartId(selectedCart!!.cartId())
                     updateProducts(products)
                 }
             }
@@ -174,7 +174,7 @@ class HomeFragment : Fragment() {
                 .changeProductStatus(product)
             if (result) {
                 val products = ClientSession.getSmartCartClient().productService()
-                    .getProductByIdAndCartId(ClientSession.getUserId(), selectedCart!!.cartId())
+                    .getProductCartId(selectedCart!!.cartId())
                 updateProducts(products)
             }
             dialog.dismiss()

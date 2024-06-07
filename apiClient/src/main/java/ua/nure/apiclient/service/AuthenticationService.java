@@ -20,7 +20,7 @@ public class AuthenticationService {
     public Optional<AuthToken> authenticate(LoginDetails loginDetails) {
         String email = loginDetails.email();
         String password = loginDetails.password();
-        String url = "http://172.22.22.69:5160/account/login?email=" + email + "&password=" + password;
+        String url = "http://172.22.22.69:5160/account/login?Email=" + email + "&Password=" + password;
 
         GetRequestThread getRequest = new GetRequestThread(url);
         getRequest.start();
